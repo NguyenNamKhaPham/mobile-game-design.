@@ -8,10 +8,14 @@ public class PlayerController : MonoBehaviour {
 	public float speed;
 	public Text indark;
 	public Text candycount;
+	public Text ExitWarning;
 
 	private ShadowDetector sd;
 	private Rigidbody rb;
 	private int candynum;
+
+	public Canvas ending_screen;
+	public Button pause_button;
 
 	// Use this for initialization
 	void Start () {
@@ -21,6 +25,14 @@ public class PlayerController : MonoBehaviour {
 
 		SetCountText ();
 		candynum = 0;
+
+		//rb.transform.position = new Vector3 (175,0.6,45);
+		ExitWarning.enabled = false;
+
+		if (ending_screen.gameObject.activeInHierarchy == true) {
+			ending_screen.gameObject.SetActive (false);
+		}
+
 
 	}
 	
@@ -32,6 +44,8 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			indark.text = "LIGHT";
 			indark.color = Color.red;
+			StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
+			rb.transform.position = new Vector3(175, 1, 45);
 		}
 	}
 
@@ -66,10 +80,33 @@ public class PlayerController : MonoBehaviour {
 			candynum += 1;
 			SetCountText ();
 		}
+
+		//Exit Level
+		if (other.gameObject.CompareTag ("Exittrigger")) {
+			
+			if (candynum > 2) {
+				Time.timeScale = 0;
+				if (ending_screen.gameObject.activeInHierarchy == false) {
+					ending_screen.gameObject.SetActive (true);
+					pause_button.gameObject.SetActive (false);
+				}
+
+			} else {
+				StartCoroutine (ShowMessage (ExitWarning, "Need More Candies For Gate Opening", 3));
+
+			}
+		}
 	}
 
 	void SetCountText(){
-		candycount.text = "Candy " + candynum.ToString ();
+		candycount.text = "Candy " + candynum.ToString () + "/6";
+	}
+
+	IEnumerator ShowMessage (Text guiText, string message, float delay) {
+		guiText.text = message;
+		guiText.enabled = true;
+		yield return new WaitForSeconds(delay);
+		guiText.enabled = false;
 	}
 
 

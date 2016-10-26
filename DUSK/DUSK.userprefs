@@ -1,8 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Menu_Conroller.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\LoadTL.cs">
     <Files>
-      <File FileName="Assets\Scripts\Menu_Conroller.cs" Line="32" Column="1" />
+      <File FileName="Assets\Scripts\CameraController.cs" Line="19" Column="3" />
+      <File FileName="Assets\Scripts\LoadTargetScene_buttoncontrol.cs" Line="13" Column="5" />
+      <File FileName="Assets\Scripts\PlayerController.cs" Line="53" Column="3" />
+      <File FileName="Assets\Scripts\PauseMenu_Controller.cs" Line="17" Column="3" />
+      <File FileName="Assets\LoadTL.cs" Line="15" Column="6" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
