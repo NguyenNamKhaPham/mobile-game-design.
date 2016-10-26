@@ -6,30 +6,33 @@ public class PlayerController : MonoBehaviour {
 	
 
 	public float speed;
-	public Text infotext;
+	public Text indark;
+	public Text candycount;
 
 	private ShadowDetector sd;
 	private Rigidbody rb;
+	private int candynum;
 
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody> ();
 		rb.freezeRotation = true;
-
 		sd = transform.GetComponent<ShadowDetector>();
+
+		SetCountText ();
+		candynum = 0;
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (sd.isShaded) {
-			infotext.text = "DUSK";
-			infotext.color = Color.black;
+			indark.text = "DUSK";
+			indark.color = Color.black;
 		} else {
-			infotext.text = "LIGHT";
-			infotext.color = Color.red;
+			indark.text = "LIGHT";
+			indark.color = Color.red;
 		}
-
 	}
 
 	void FixedUpdate () {
@@ -53,7 +56,21 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		rb.velocity = movement * speed;
-
-
 	}
+
+
+	void OnTriggerEnter(Collider other){
+		//Candy collector
+		if (other.gameObject.CompareTag ("Candy")) {
+			other.gameObject.SetActive (false);
+			candynum += 1;
+			SetCountText ();
+		}
+	}
+
+	void SetCountText(){
+		candycount.text = "Candy " + candynum.ToString ();
+	}
+
+
 }
