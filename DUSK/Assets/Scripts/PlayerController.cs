@@ -33,13 +33,24 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-
-		Vector3 pos = Input.mousePosition;
+		
+		//Vector3 pos = Input.mousePosition;
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
+		if (Input.touchCount > 0) {
+			// The screen has been touched so store the touch
+			Touch touch = Input.GetTouch (0);
 
+			if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved) {
+				// If the finger is on the screen, move the object smoothly to the touch position
+				moveHorizontal = (touch.position.x - Screen.width/2)/(Screen.width/2);
+				moveVertical = (touch.position.y - Screen.height/2)/(Screen.height/2);
+				movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
+			}
+			Debug.Log (movement);
+		}
 
 		rb.velocity = movement * speed;
 
