@@ -10,9 +10,8 @@ public class LoadTL : MonoBehaviour {
 		Scene scene = SceneManager.GetActiveScene();
 
 		Debug.Log("Active scene is '" + scene.name + "'.");
-
+		Time.timeScale = 1;
 		LoadingScreenManager.LoadScene (num);
-		//sSceneManager.LoadScene (num);
 
 	}
 }
