@@ -1,9 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/PlayerController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Trigger_Controller.cs">
     <Files>
-      <File FileName="Assets/Scripts/PlayerController.cs" Line="40" Column="8" />
-      <File FileName="Assets/Scripts/ShadowDetector.cs" Line="58" Column="57" />
+      <File FileName="Assets/Scripts/PlayerController.cs" Line="192" Column="27" />
+      <File FileName="Assets/Scripts/enemy1.cs" Line="76" Column="85" />
+      <File FileName="Assets/Scripts/Trigger_Controller.cs" Line="29" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
