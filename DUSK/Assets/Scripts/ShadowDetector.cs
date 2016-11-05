@@ -55,7 +55,7 @@ public class ShadowDetector : MonoBehaviour {
             v_croutineReady = false;
             v_capsCenter = t_player.TransformPoint(playerCollider.center);
             v_capsRadius = playerCollider.radius;
-            v_capsHalfHeight = playerCollider.height * 0.5f;
+            v_capsHalfHeight = playerCollider.height * 1f;
             v_upDirection = t_player.up;
             StartCoroutine(GetAllCloseLights(v_capsCenter, () => {
                 StartCoroutine(GetDirectionalLightsBright(() => {

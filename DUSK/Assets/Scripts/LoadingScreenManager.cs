@@ -20,6 +20,7 @@ public class LoadingScreenManager : MonoBehaviour {
 	public LoadSceneMode loadSceneMode = LoadSceneMode.Single;
 	public ThreadPriority loadThreadPriority;
 
+
 	[Header("Other")]
 	// If loading additive, link to the cameras audio listener, to avoid multiple active audio listeners
 	public AudioListener audioListener;
@@ -29,7 +30,8 @@ public class LoadingScreenManager : MonoBehaviour {
 
 	public static int sceneToLoad = -1;
 	// IMPORTANT! This is the build index of your loading scene. You need to change this to match your actual scene index
-	static int loadingSceneIndex = 2;
+	static int loadingSceneIndex = 1;
+
 
 	public static void LoadScene(int levelNum) {				
 		Application.backgroundLoadingPriority = ThreadPriority.High;

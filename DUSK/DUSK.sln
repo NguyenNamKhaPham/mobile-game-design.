@@ -1,7 +1,7 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DUSK.CSharp", "DUSK.CSharp.csproj", "{5C3C5EF6-6918-862E-78DF-B56421B2E358}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{8466C3BC-34D3-A3A8-0E86-84E60B885967}") = "DUSK", "Assembly-CSharp.csproj", "{961CACE0-C1D7-1017-C332-D973C1D9FB87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,12 +9,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C3C5EF6-6918-862E-78DF-B56421B2E358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C3C5EF6-6918-862E-78DF-B56421B2E358}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C3C5EF6-6918-862E-78DF-B56421B2E358}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C3C5EF6-6918-862E-78DF-B56421B2E358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{961CACE0-C1D7-1017-C332-D973C1D9FB87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{961CACE0-C1D7-1017-C332-D973C1D9FB87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{961CACE0-C1D7-1017-C332-D973C1D9FB87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{961CACE0-C1D7-1017-C332-D973C1D9FB87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

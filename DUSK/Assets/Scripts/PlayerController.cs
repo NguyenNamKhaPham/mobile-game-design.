@@ -4,79 +4,99 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 	
-
-	public float speed;
-	public Text indark;
 	public Text candycount;
 	public Text ExitWarning;
-
-	private GameObject wagon1;
-	private GameObject wagon2;
-	private Vector3 moveVector;
-	private ShadowDetector sd;
-	private Rigidbody rb;
-	private int candynum;
-
 	public Canvas ending_screen;
 	public Button pause_button;
+	public int candytotal;
+	public Vector3 original_pos;
+	public int required_candynum;
+	private int candynum;
+
+	//for shadow detection
+	private ShadowDetector sd;
+
+	//For movement
+	private GameObject tap;
+	private Vector3 tapLocation;
+	private Ray ray;
+	private Rigidbody rb;
+	public float speed;
+
+	//for movable objects
+	GameObject[] movedObjects;
+	Vector3[] movedOjectsPosition;
 
 	// Use this for initialization
 	void Start () {
+		//for movement
+		tap = GameObject.Find ("tapEffect");
+		tapLocation = transform.position;
 		rb = GetComponent<Rigidbody> ();
 		rb.freezeRotation = true;
+		speed = 2f;
+
+		//for detect shadow
 		sd = transform.GetComponent<ShadowDetector>();
-		wagon1 = GameObject.FindGameObjectWithTag ("cart1");
-		wagon2 = GameObject.FindGameObjectWithTag ("cart2");
-		speed = 10f;
+
+		//set candy
 		SetCountText ();
 		candynum = 0;
 
-		//rb.transform.position = new Vector3 (175,0.6,45);
+		//store all movable object positions
+		movedObjects = GameObject.FindGameObjectsWithTag("movableObject");
+		movedOjectsPosition = new Vector3[movedObjects.Length];
+		for (int i = 0; i < movedObjects.Length; i++) {
+			movedOjectsPosition [i] = movedObjects [i].transform.position;
+		}
+			
 		ExitWarning.enabled = false;
 
 		if (ending_screen.gameObject.activeInHierarchy == true) {
 			ending_screen.gameObject.SetActive (false);
 		}
-
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (sd.isShaded) {
-			indark.text = "DUSK";
-			indark.color = Color.black;
-		} else {
-			indark.text = "LIGHT";
-			indark.color = Color.red;
+		//hit light
+		if (!sd.isShaded) {
+			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
 			StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
-			rb.transform.position = new Vector3(175, 1, 45);
-			wagon1.transform.position = new Vector3 (181f, 0f, 138f);
-			wagon2.transform.position = new Vector3 (158f, 0f, 255f);
+			transform.position = original_pos;
+			tapLocation = original_pos;
+			rb.velocity = Vector3.zero;
+			for (int i = 0; i < movedObjects.Length; i++) {
+				movedObjects [i].transform.position = movedOjectsPosition [i];
+			}
 		}
 	}
 
 	void FixedUpdate () {
-		
-		//use keyboard to move
-		float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis ("Vertical");
-
-		//use touch screen to move
-		if (Input.touchCount > 0) {
-			// The screen has been touched so store the touch
-			Touch touch = Input.GetTouch (0);
-			if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved) {
-				// If the finger is on the screen, move the object smoothly to the touch position
-				moveHorizontal = (touch.position.x - Screen.width/2)/(Screen.width/2);
-				moveVertical = (touch.position.y - Screen.height/2)/(Screen.height/2);
+		//mouse click or touch, get ray
+		if (Input.GetMouseButton (0) || Input.touchCount > 0) {
+			if (Input.GetMouseButton (0)) {
+				ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			} else {
+				ray = Camera.main.ScreenPointToRay (Input.touches [0].position);
+			}
+			//identify hit, find the correct hit
+			RaycastHit[] hits;
+			hits = Physics.RaycastAll (ray);
+			for (int i = 0; i < hits.Length; i++) {
+				RaycastHit hit = hits [i];
+				if (hit.collider.name == "floor") {
+					indicateTap (hit);
+					break;
+				}
 			}
 		}
-		moveVector = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-		Vector3 faceTo = new Vector3 (-moveHorizontal, 0.0f, -moveVertical);
-		if (moveVector != Vector3.zero)
-			transform.rotation = Quaternion.LookRotation(faceTo);
-		rb.velocity =  moveVector * speed;
+		//get to that location
+		if ((Mathf.Abs (transform.position.x - tapLocation.x) > 0.1f) || (Mathf.Abs (transform.position.z - tapLocation.z) > 0.1f)) {
+			rb.velocity = (tapLocation - transform.position) * speed;
+		} else {
+			tap.SetActive (false);
+		}
 	}
 
 
@@ -91,7 +111,7 @@ public class PlayerController : MonoBehaviour {
 		//Exit Level
 		if (other.gameObject.CompareTag ("Exittrigger")) {
 			
-			if (candynum > 2) {
+			if (candynum >= required_candynum) {
 				Time.timeScale = 0;
 				if (ending_screen.gameObject.activeInHierarchy == false) {
 					ending_screen.gameObject.SetActive (true);
@@ -100,13 +120,28 @@ public class PlayerController : MonoBehaviour {
 
 			} else {
 				StartCoroutine (ShowMessage (ExitWarning, "Need More Candies For Gate Opening", 3));
-
 			}
 		}
+
+		if (other.gameObject.CompareTag ("Button_trigger")) {
+			Trigger_Controller Trigger_Controller_script = other.GetComponent<Trigger_Controller>();
+			Trigger_Controller_script.Triggered();
+		}
+
 	}
 
 	void SetCountText(){
-		candycount.text = "Candy " + candynum.ToString () + "/6";
+		candycount.text = "Candy " + candynum.ToString () + "/" + candytotal;
+	}
+
+	//indicate successful tap/click, store and face to that location
+	void indicateTap(RaycastHit hit){
+		tapLocation = hit.point;
+		tapLocation.y = transform.position.y;
+		tap.GetComponent <tapEffect> ().active = true;
+		tap.SetActive (true);
+		tap.transform.position = tapLocation;
+		transform.LookAt (tapLocation);
 	}
 
 	IEnumerator ShowMessage (Text guiText, string message, float delay) {
