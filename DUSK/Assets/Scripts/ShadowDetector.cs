@@ -48,7 +48,7 @@ public class ShadowDetector : MonoBehaviour {
     }
 	
 	void Update () {
-
+		
         if (v_croutineReady)
         {
             v_bright = 0f;
@@ -121,23 +121,23 @@ public class ShadowDetector : MonoBehaviour {
         RaycastHit hit;
         // center
         if (Physics.Linecast(lightPos, v_capsCenter, out hit, obstaclesLayers))
-        {
+		{Debug.Log("1111");
             //left
             if (t_player != hit.transform &&
                 Physics.Linecast(lightPos, v_capsCenter + leftDirection * v_capsRadius, out hit, obstaclesLayers))
-            {
+			{Debug.Log("22222");
                 // right
                 if (t_player != hit.transform &&
                     Physics.Linecast(lightPos, v_capsCenter + -leftDirection * v_capsRadius, out hit, obstaclesLayers))
-                {
+				{Debug.Log("3333333");
                     // up
                     if (t_player != hit.transform &&
                         Physics.Linecast(lightPos, v_capsCenter + v_upDirection * v_capsHalfHeight, out hit, obstaclesLayers))
-                    {
+					{Debug.Log("4444444");
                         // down
                         if (t_player != hit.transform &&
                             Physics.Linecast(lightPos, v_capsCenter + -v_upDirection * v_capsHalfHeight, out hit, obstaclesLayers))
-                        {
+						{Debug.Log("555555");
                             if (t_player != hit.transform) return;
                         }
                     }
@@ -208,5 +208,4 @@ public class ShadowDetector : MonoBehaviour {
         GUILayout.Label("Sensor Bright = " + string.Format("{0:0.00}", v_bright));
         GUILayout.EndArea();
     }
-
 }
