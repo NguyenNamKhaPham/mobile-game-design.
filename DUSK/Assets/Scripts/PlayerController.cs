@@ -16,6 +16,12 @@ public class PlayerController : MonoBehaviour {
 	//for shadow detection
 	private ShadowDetector sd;
 
+	//transparent
+	private GameObject[] oldGS = new GameObject[0];
+	private GameObject[] newGS;
+	private System.Collections.Generic.Dictionary <GameObject, Material> blockedObjects 
+	= new System.Collections.Generic.Dictionary <GameObject, Material>();
+
 	//For movement
 	private GameObject tap;
 	private Vector3 tapLocation;
@@ -97,6 +103,9 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			tap.SetActive (false);
 		}
+
+		//turn blocked objects transparent
+		makeTransparent ();
 	}
 
 
@@ -128,6 +137,7 @@ public class PlayerController : MonoBehaviour {
 			Trigger_Controller_script.Triggered();
 		}
 
+
 	}
 
 	void SetCountText(){
@@ -151,5 +161,57 @@ public class PlayerController : MonoBehaviour {
 		guiText.enabled = false;
 	}
 
+	void makeTransparent(){
+		//collect all blocked objects
+		Vector3 fwd = Camera.main.transform.position - transform.position;
+		Vector3 temp = transform.position;
+		RaycastHit[] hits;
+		hits = Physics.RaycastAll (temp, fwd, 50f);
+		newGS = new GameObject[hits.Length];
+		for (int i = 0; i < hits.Length; i++) {
+			newGS [i] = hits[i].collider.gameObject;
+		}
 
+		//old object no longer blocks
+		foreach (GameObject oldG in oldGS){
+			if (!exists (oldG, newGS) && oldG.tag == "environment"){
+				Material m;
+				blockedObjects.TryGetValue(oldG, out m);
+				oldG.GetComponent<MeshRenderer> ().material = m;
+				blockedObjects.Remove (oldG);
+			}
+		}
+		//new objects block
+		foreach (GameObject newG in newGS) {
+			if (!exists (newG, oldGS) && newG.tag == "environment") {
+				Material m = newG.GetComponent<MeshRenderer> ().material;
+				blockedObjects.Add (newG, new Material(m));
+				convertToTransparent (m);
+			}
+		}
+		//update blocked obejcts
+		oldGS = newGS;
+	}
+
+	//change value of texture so object becomes transparent
+	void convertToTransparent(Material m){
+		m.SetFloat ("_Mode", 3);
+		m.SetInt ("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+		m.SetInt ("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+		m.SetInt ("_ZWrite", 0);
+		m.DisableKeyword ("_ALPHATEST_ON");
+		m.DisableKeyword ("_ALPHABLEND_ON");
+		m.EnableKeyword ("_ALPHAPREMULTIPLY_ON");
+		m.renderQueue = 3000;
+	}
+
+	//check of GameObject g in array
+	bool exists(GameObject g, GameObject[] gs){
+		int i = gs.Length;
+		while (--i > 0) {
+			if (g == gs [i])
+				return true;
+		}
+		return false;
+	}
 }
