@@ -21,6 +21,7 @@ public class Trigger_Controller : MonoBehaviour {
 		}
 		is_triggered = true;
 	}
+		
 
 
 

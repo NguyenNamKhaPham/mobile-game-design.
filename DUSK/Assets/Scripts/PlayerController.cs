@@ -112,6 +112,7 @@ public class PlayerController : MonoBehaviour {
 			Trigger_Controller_script.Triggered();
 		}
 
+
 	}
 
 	void SetCountText(){
