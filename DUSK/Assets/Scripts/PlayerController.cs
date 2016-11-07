@@ -13,8 +13,10 @@ public class PlayerController : MonoBehaviour {
 	public int required_candynum;
 	private int candynum;
 
+	public bool keys = false;
+
 	//for shadow detection
-	private ShadowDetector sd;
+	private ShadowDetector[] sds;
 
 	//transparent
 	private GameObject[] oldGS = new GameObject[0];
@@ -25,7 +27,7 @@ public class PlayerController : MonoBehaviour {
 	//For movement
 	private GameObject tap;
 	private Vector3 tapLocation;
-	private Ray ray;
+	private Ray ray; 
 	private Rigidbody rb;
 	public float speed;
 
@@ -35,6 +37,9 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//store original position
+		original_pos = transform.position;
+
 		//for movement
 		tap = GameObject.Find ("tapEffect");
 		tapLocation = transform.position;
@@ -42,31 +47,35 @@ public class PlayerController : MonoBehaviour {
 		rb.freezeRotation = true;
 		speed = 2f;
 
-		//for detect shadow
-		sd = transform.GetComponent<ShadowDetector>();
-
-		//set candy
-		SetCountText ();
-		candynum = 0;
-
 		//store all movable object positions
 		movedObjects = GameObject.FindGameObjectsWithTag("movableObject");
 		movedOjectsPosition = new Vector3[movedObjects.Length];
-		for (int i = 0; i < movedObjects.Length; i++) {
-			movedOjectsPosition [i] = movedObjects [i].transform.position;
+		for (int j = 0; j < movedObjects.Length; j++) {
+			movedOjectsPosition [j] = movedObjects [j].transform.position;
 		}
 			
+		//for detect shadow
+		sds = gatherShadowObjs("shadowDetect");
+		Debug.Log (sds);
+
 		ExitWarning.enabled = false;
 
 		if (ending_screen.gameObject.activeInHierarchy == true) {
 			ending_screen.gameObject.SetActive (false);
 		}
+
+		//set candy
+		SetCountText ();
+		candynum = 0;
+
+
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+
+	void FixedUpdate () {
 		//hit light
-		if (!sd.isShaded) {
+		if (shaded (sds)) {
+			//Debug.Log ("die");
 			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
 			StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
 			transform.position = original_pos;
@@ -75,35 +84,44 @@ public class PlayerController : MonoBehaviour {
 			for (int i = 0; i < movedObjects.Length; i++) {
 				movedObjects [i].transform.position = movedOjectsPosition [i];
 			}
-		}
-	}
 
-	void FixedUpdate () {
-		//mouse click or touch, get ray
-		if (Input.GetMouseButton (0) || Input.touchCount > 0) {
-			if (Input.GetMouseButton (0)) {
-				ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-			} else {
-				ray = Camera.main.ScreenPointToRay (Input.touches [0].position);
-			}
-			//identify hit, find the correct hit
-			RaycastHit[] hits;
-			hits = Physics.RaycastAll (ray);
-			for (int i = 0; i < hits.Length; i++) {
-				RaycastHit hit = hits [i];
-				if (hit.collider.name == "floor") {
-					indicateTap (hit);
-					break;
+		}
+
+		if (keys) {
+			float moveHorizontal = Input.GetAxis ("Horizontal");
+			float moveVertical = Input.GetAxis ("Vertical");
+
+			Vector3 moveVector = new Vector3 (moveHorizontal, 0.0f, moveVertical);
+			Vector3 faceTo = new Vector3 (-moveHorizontal, 0.0f, -moveVertical);
+			if (moveVector != Vector3.zero)
+				transform.rotation = Quaternion.LookRotation (faceTo);
+			rb.velocity = moveVector * 20f;
+		} else {
+			//mouse click or touch, get ray
+			if (Input.GetMouseButton (0) || Input.touchCount > 0) {
+				if (Input.GetMouseButton (0)) {
+					ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+				} else {
+					ray = Camera.main.ScreenPointToRay (Input.touches [0].position);
+				}
+				//identify hit, find the correct hit
+				RaycastHit[] hits;
+				hits = Physics.RaycastAll (ray);
+				for (int i = 0; i < hits.Length; i++) {
+					RaycastHit hit = hits [i];
+					if (hit.collider.name == "floor") {
+						indicateTap (hit);
+						break;
+					}
 				}
 			}
+			//get to that location
+			if ((Mathf.Abs (transform.position.x - tapLocation.x) > 0.1f) || (Mathf.Abs (transform.position.z - tapLocation.z) > 0.1f)) {
+				rb.velocity = (tapLocation - transform.position) * speed;
+			} else {
+				tap.SetActive (false);
+			}
 		}
-		//get to that location
-		if ((Mathf.Abs (transform.position.x - tapLocation.x) > 0.1f) || (Mathf.Abs (transform.position.z - tapLocation.z) > 0.1f)) {
-			rb.velocity = (tapLocation - transform.position) * speed;
-		} else {
-			tap.SetActive (false);
-		}
-
 		//turn blocked objects transparent
 		makeTransparent ();
 	}
@@ -144,6 +162,8 @@ public class PlayerController : MonoBehaviour {
 		candycount.text = "Candy " + candynum.ToString () + "/" + candytotal;
 	}
 
+
+
 	//indicate successful tap/click, store and face to that location
 	void indicateTap(RaycastHit hit){
 		tapLocation = hit.point;
@@ -161,6 +181,7 @@ public class PlayerController : MonoBehaviour {
 		guiText.enabled = false;
 	}
 
+	//check and make transparency
 	void makeTransparent(){
 		//collect all blocked objects
 		Vector3 fwd = Camera.main.transform.position - transform.position;
@@ -212,6 +233,23 @@ public class PlayerController : MonoBehaviour {
 			if (g == gs [i])
 				return true;
 		}
+		return false;
+	}
+
+	static ShadowDetector[] gatherShadowObjs(string tag){
+		GameObject[] o = GameObject.FindGameObjectsWithTag(tag);
+		int l = o.Length;
+		ShadowDetector[] s = new ShadowDetector[l];
+		for (int i = 0; i < l; i++) {
+			s [i] = o [i].GetComponent<ShadowDetector> ();
+		}
+		return s;
+	}
+
+	static bool shaded(ShadowDetector[] sd){
+		foreach (ShadowDetector s in sd)
+			if (!s.isShaded)
+				return true;
 		return false;
 	}
 }

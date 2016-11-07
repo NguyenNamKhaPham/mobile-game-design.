@@ -6,7 +6,6 @@ using System.Collections.Generic;
 public class ShadowDetector : MonoBehaviour {
 
     public bool autoGetCollider = true;
-    public CapsuleCollider playerCollider;
     public LayerMask lightLayers = -1;
     public LayerMask obstaclesLayers = -1;
     public float maxShadowBright = 0.5f;
@@ -30,20 +29,9 @@ public class ShadowDetector : MonoBehaviour {
         get { return v_shaded; }
     }
 
-    public float shadowBright
-    {
-        get { return v_bright; }
-    }
+  
 
     void Start () {
-        if(autoGetCollider)
-        {
-            playerCollider = GetComponent<CapsuleCollider>();
-        }
-        else
-        {
-            if (playerCollider == null) playerCollider = gameObject.AddComponent<CapsuleCollider>();
-        }
         t_player = transform;
     }
 	
@@ -53,9 +41,9 @@ public class ShadowDetector : MonoBehaviour {
         {
             v_bright = 0f;
             v_croutineReady = false;
-            v_capsCenter = t_player.TransformPoint(playerCollider.center);
-            v_capsRadius = playerCollider.radius;
-            v_capsHalfHeight = playerCollider.height * 1f;
+			v_capsCenter = t_player.TransformPoint(Vector3.zero);
+            v_capsRadius = 0.5f;
+            v_capsHalfHeight = 2f;
             v_upDirection = t_player.up;
             StartCoroutine(GetAllCloseLights(v_capsCenter, () => {
                 StartCoroutine(GetDirectionalLightsBright(() => {
@@ -121,23 +109,23 @@ public class ShadowDetector : MonoBehaviour {
         RaycastHit hit;
         // center
         if (Physics.Linecast(lightPos, v_capsCenter, out hit, obstaclesLayers))
-		{Debug.Log("1111");
+		{
             //left
             if (t_player != hit.transform &&
                 Physics.Linecast(lightPos, v_capsCenter + leftDirection * v_capsRadius, out hit, obstaclesLayers))
-			{Debug.Log("22222");
+			{
                 // right
                 if (t_player != hit.transform &&
                     Physics.Linecast(lightPos, v_capsCenter + -leftDirection * v_capsRadius, out hit, obstaclesLayers))
-				{Debug.Log("3333333");
+				{
                     // up
                     if (t_player != hit.transform &&
                         Physics.Linecast(lightPos, v_capsCenter + v_upDirection * v_capsHalfHeight, out hit, obstaclesLayers))
-					{Debug.Log("4444444");
+					{
                         // down
                         if (t_player != hit.transform &&
                             Physics.Linecast(lightPos, v_capsCenter + -v_upDirection * v_capsHalfHeight, out hit, obstaclesLayers))
-						{Debug.Log("555555");
+						{
                             if (t_player != hit.transform) return;
                         }
                     }
@@ -199,13 +187,5 @@ public class ShadowDetector : MonoBehaviour {
     private bool IsInLayerMask(GameObject obj)
     {
         return ((lightLayers.value & (1 << obj.layer)) > 0);
-    }
-
-    void OnGUI()
-    {
-        if (!debugMode) return;
-        GUILayout.BeginArea(new Rect(10f, 10f, Screen.width, Screen.height));
-        GUILayout.Label("Sensor Bright = " + string.Format("{0:0.00}", v_bright));
-        GUILayout.EndArea();
     }
 }
