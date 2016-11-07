@@ -111,13 +111,23 @@
     <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\Twirl.cs" />
     <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\VignetteAndChromaticAberration.cs" />
     <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\Vortex.cs" />
+    <Compile Include="Assets\LoadTL.cs" />
     <Compile Include="Assets\Scripts\Autoturnoff_light.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Scripts\Menu_Conroller.cs" />
+    <Compile Include="Assets\Scripts\LoadTargetScene_buttoncontrol.cs" />
+    <Compile Include="Assets\Scripts\LoadingScreenManager.cs" />
+    <Compile Include="Assets\Scripts\PauseMenu_Controller.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Rotator.cs" />
     <Compile Include="Assets\Scripts\ShadowDetector.cs" />
+    <Compile Include="Assets\Scripts\Start_Menu_Camera_Controller.cs" />
+    <Compile Include="Assets\Scripts\appliedForce.cs" />
     <Compile Include="Assets\Scripts\auto_move.cs" />
+    <Compile Include="Assets\Scripts\enemy1.cs" />
+    <Compile Include="Assets\Scripts\enemy2.cs" />
+    <Compile Include="Assets\Scripts\enemy3.cs" />
+    <Compile Include="Assets\Scripts\enemy4.cs" />
+    <Compile Include="Assets\Scripts\raycastForward.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Downloads\Free!Low_Poly_Boxy-Stylized_Trees#0\README.txt" />

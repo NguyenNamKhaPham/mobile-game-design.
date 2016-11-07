@@ -4,58 +4,108 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 	
-
-	public float speed;
-	public Text indark;
 	public Text candycount;
-
-	private ShadowDetector sd;
-	private Rigidbody rb;
+	public Text ExitWarning;
+	public Canvas ending_screen;
+	public Button pause_button;
+	public int candytotal;
+	public Vector3 original_pos;
+	public int required_candynum;
 	private int candynum;
+
+	//for shadow detection
+	private ShadowDetector sd;
+
+	//transparent
+	private GameObject[] oldGS = new GameObject[0];
+	private GameObject[] newGS;
+	private System.Collections.Generic.Dictionary <GameObject, Material> blockedObjects 
+	= new System.Collections.Generic.Dictionary <GameObject, Material>();
+
+	//For movement
+	private GameObject tap;
+	private Vector3 tapLocation;
+	private Ray ray;
+	private Rigidbody rb;
+	public float speed;
+
+	//for movable objects
+	GameObject[] movedObjects;
+	Vector3[] movedOjectsPosition;
 
 	// Use this for initialization
 	void Start () {
+		//for movement
+		tap = GameObject.Find ("tapEffect");
+		tapLocation = transform.position;
 		rb = GetComponent<Rigidbody> ();
 		rb.freezeRotation = true;
+		speed = 2f;
+
+		//for detect shadow
 		sd = transform.GetComponent<ShadowDetector>();
 
+		//set candy
 		SetCountText ();
 		candynum = 0;
 
+		//store all movable object positions
+		movedObjects = GameObject.FindGameObjectsWithTag("movableObject");
+		movedOjectsPosition = new Vector3[movedObjects.Length];
+		for (int i = 0; i < movedObjects.Length; i++) {
+			movedOjectsPosition [i] = movedObjects [i].transform.position;
+		}
+			
+		ExitWarning.enabled = false;
+
+		if (ending_screen.gameObject.activeInHierarchy == true) {
+			ending_screen.gameObject.SetActive (false);
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (sd.isShaded) {
-			indark.text = "DUSK";
-			indark.color = Color.black;
-		} else {
-			indark.text = "LIGHT";
-			indark.color = Color.red;
+		//hit light
+		if (!sd.isShaded) {
+			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
+			StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
+			transform.position = original_pos;
+			tapLocation = original_pos;
+			rb.velocity = Vector3.zero;
+			for (int i = 0; i < movedObjects.Length; i++) {
+				movedObjects [i].transform.position = movedOjectsPosition [i];
+			}
 		}
 	}
 
 	void FixedUpdate () {
-		
-		//Vector3 pos = Input.mousePosition;
-		float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis ("Vertical");
-
-		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-		if (Input.touchCount > 0) {
-			// The screen has been touched so store the touch
-			Touch touch = Input.GetTouch (0);
-
-			if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved) {
-				// If the finger is on the screen, move the object smoothly to the touch position
-				moveHorizontal = (touch.position.x - Screen.width/2)/(Screen.width/2);
-				moveVertical = (touch.position.y - Screen.height/2)/(Screen.height/2);
-				movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
+		//mouse click or touch, get ray
+		if (Input.GetMouseButton (0) || Input.touchCount > 0) {
+			if (Input.GetMouseButton (0)) {
+				ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			} else {
+				ray = Camera.main.ScreenPointToRay (Input.touches [0].position);
 			}
-			Debug.Log (movement);
+			//identify hit, find the correct hit
+			RaycastHit[] hits;
+			hits = Physics.RaycastAll (ray);
+			for (int i = 0; i < hits.Length; i++) {
+				RaycastHit hit = hits [i];
+				if (hit.collider.name == "floor") {
+					indicateTap (hit);
+					break;
+				}
+			}
+		}
+		//get to that location
+		if ((Mathf.Abs (transform.position.x - tapLocation.x) > 0.1f) || (Mathf.Abs (transform.position.z - tapLocation.z) > 0.1f)) {
+			rb.velocity = (tapLocation - transform.position) * speed;
+		} else {
+			tap.SetActive (false);
 		}
 
-		rb.velocity = movement * speed;
+		//turn blocked objects transparent
+		makeTransparent ();
 	}
 
 
@@ -66,11 +116,102 @@ public class PlayerController : MonoBehaviour {
 			candynum += 1;
 			SetCountText ();
 		}
+
+		//Exit Level
+		if (other.gameObject.CompareTag ("Exittrigger")) {
+			
+			if (candynum >= required_candynum) {
+				Time.timeScale = 0;
+				if (ending_screen.gameObject.activeInHierarchy == false) {
+					ending_screen.gameObject.SetActive (true);
+					pause_button.gameObject.SetActive (false);
+				}
+
+			} else {
+				StartCoroutine (ShowMessage (ExitWarning, "Need More Candies For Gate Opening", 3));
+			}
+		}
+
+		if (other.gameObject.CompareTag ("Button_trigger")) {
+			Trigger_Controller Trigger_Controller_script = other.GetComponent<Trigger_Controller>();
+			Trigger_Controller_script.Triggered();
+		}
+
+
 	}
 
 	void SetCountText(){
-		candycount.text = "Candy " + candynum.ToString ();
+		candycount.text = "Candy " + candynum.ToString () + "/" + candytotal;
 	}
 
+	//indicate successful tap/click, store and face to that location
+	void indicateTap(RaycastHit hit){
+		tapLocation = hit.point;
+		tapLocation.y = transform.position.y;
+		tap.GetComponent <tapEffect> ().active = true;
+		tap.SetActive (true);
+		tap.transform.position = tapLocation;
+		transform.LookAt (tapLocation);
+	}
 
+	IEnumerator ShowMessage (Text guiText, string message, float delay) {
+		guiText.text = message;
+		guiText.enabled = true;
+		yield return new WaitForSeconds(delay);
+		guiText.enabled = false;
+	}
+
+	void makeTransparent(){
+		//collect all blocked objects
+		Vector3 fwd = Camera.main.transform.position - transform.position;
+		Vector3 temp = transform.position;
+		RaycastHit[] hits;
+		hits = Physics.RaycastAll (temp, fwd, 50f);
+		newGS = new GameObject[hits.Length];
+		for (int i = 0; i < hits.Length; i++) {
+			newGS [i] = hits[i].collider.gameObject;
+		}
+
+		//old object no longer blocks
+		foreach (GameObject oldG in oldGS){
+			if (!exists (oldG, newGS) && oldG.tag == "environment"){
+				Material m;
+				blockedObjects.TryGetValue(oldG, out m);
+				oldG.GetComponent<MeshRenderer> ().material = m;
+				blockedObjects.Remove (oldG);
+			}
+		}
+		//new objects block
+		foreach (GameObject newG in newGS) {
+			if (!exists (newG, oldGS) && newG.tag == "environment") {
+				Material m = newG.GetComponent<MeshRenderer> ().material;
+				blockedObjects.Add (newG, new Material(m));
+				convertToTransparent (m);
+			}
+		}
+		//update blocked obejcts
+		oldGS = newGS;
+	}
+
+	//change value of texture so object becomes transparent
+	void convertToTransparent(Material m){
+		m.SetFloat ("_Mode", 3);
+		m.SetInt ("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+		m.SetInt ("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+		m.SetInt ("_ZWrite", 0);
+		m.DisableKeyword ("_ALPHATEST_ON");
+		m.DisableKeyword ("_ALPHABLEND_ON");
+		m.EnableKeyword ("_ALPHAPREMULTIPLY_ON");
+		m.renderQueue = 3000;
+	}
+
+	//check of GameObject g in array
+	bool exists(GameObject g, GameObject[] gs){
+		int i = gs.Length;
+		while (--i > 0) {
+			if (g == gs [i])
+				return true;
+		}
+		return false;
+	}
 }
