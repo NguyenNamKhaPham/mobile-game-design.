@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: f074f0e1c0f72446fba3f662c7b0c473
-timeCreated: 1478547573
+timeCreated: 1478328571
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -96,8 +96,9 @@ ModelImporter:
     4300000: CrazyHair_Boy:Base_Body_boy_polySurface12
     4300002: Prop_Scythe1:Prop_Scythe1_GeoSphere001_Prop_Scythe1_initialShadingGroup_initialShadingGroup_polySurface27_polySurface25_polySurface21
     4300004: Prop_Lantern:initialShadingGroup_polySurface26
-    7400000: Lantern_Boy_Scanning
+    7400000: Take 001
     9500000: //RootNode
+    11100000: //RootNode
     13700000: CrazyHair_Boy:Base_Body_boy_polySurface12
   materials:
     importMaterials: 1
@@ -121,15 +122,15 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Lantern_Boy_Scanning
+      name: Take 001
       takeName: Take 001
       firstFrame: 1
       lastFrame: 25
-      wrapMode: 0
+      wrapMode: 2
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
-      loop: 0
+      loop: 1
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
@@ -269,7 +270,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 1
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
