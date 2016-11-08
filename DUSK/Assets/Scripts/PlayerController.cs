@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 	
-
-	public float speed;
-	public Text indark;
 	public Text candycount;
 	public Text ExitWarning;
 	public Canvas ending_screen;
@@ -14,73 +11,121 @@ public class PlayerController : MonoBehaviour {
 	public int candytotal;
 	public Vector3 original_pos;
 	public int required_candynum;
+	public float speed;
 
-	private GameObject wagon1;
-	private GameObject wagon2;
-	private Vector3 moveVector;
-	private ShadowDetector sd;
+	public bool keys = false;
+
+	//for shadow detection
+	private ShadowDetector[] sds;
+
+	//transparent
+	public Material transparent_mat;
+	private GameObject[] oldGS = new GameObject[0];
+	private GameObject[] newGS;
+	private System.Collections.Generic.Dictionary <GameObject, Material> blockedObjects 
+	= new System.Collections.Generic.Dictionary <GameObject, Material>();
+
+	//For movement
+	private GameObject tap;
+	private Vector3 tapLocation;
+	private Ray ray; 
 	private Rigidbody rb;
 	private int candynum;
 
 
+	//for movable objects
+	GameObject[] movedObjects;
+	Vector3[] movedOjectsPosition;
 
 	// Use this for initialization
 	void Start () {
+		//store original position
+		original_pos = transform.position;
+
+		//for movement
+		tap = GameObject.Find ("tapEffect");
+		tapLocation = transform.position;
 		rb = GetComponent<Rigidbody> ();
 		rb.freezeRotation = true;
-		sd = transform.GetComponent<ShadowDetector>();
-		wagon1 = GameObject.FindGameObjectWithTag ("cart1");
-		wagon2 = GameObject.FindGameObjectWithTag ("cart2");
-		//speed = 10f;
-		SetCountText ();
-		candynum = 0;
+		speed = 2f;
 
-		//rb.transform.position = new Vector3 (175,0.6,45);
+		//store all movable object positions
+		movedObjects = GameObject.FindGameObjectsWithTag("movableObject");
+		movedOjectsPosition = new Vector3[movedObjects.Length];
+		for (int j = 0; j < movedObjects.Length; j++) {
+			movedOjectsPosition [j] = movedObjects [j].transform.position;
+		}
+			
+		//for detect shadow
+		sds = gatherShadowObjs("shadowDetect");
+		//Debug.Log (sds);
+
 		ExitWarning.enabled = false;
 
 		if (ending_screen.gameObject.activeInHierarchy == true) {
 			ending_screen.gameObject.SetActive (false);
 		}
 
+		//set candy
+		SetCountText ();
+		candynum = 0;
+
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (sd.isShaded) {
-			indark.text = "DUSK";
-			indark.color = Color.black;
-		} else {
-			indark.text = "LIGHT";
-			indark.color = Color.red;
-			StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
-			rb.transform.position = original_pos;
-			wagon1.transform.position = new Vector3 (181f, 0f, 138f);
-			wagon2.transform.position = new Vector3 (158f, 0f, 255f);
-		}
-	}
+
 
 	void FixedUpdate () {
-		
-		//use keyboard to move
-		float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis ("Vertical");
+		//hit light
+		if (shaded (sds)) {
+			//Debug.Log ("die");
+			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
+			StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
+			transform.position = original_pos;
+			tapLocation = original_pos;
+			rb.velocity = Vector3.zero;
+			for (int i = 0; i < movedObjects.Length; i++) {
+				movedObjects [i].transform.position = movedOjectsPosition [i];
+			}
 
-		//use touch screen to move
-		if (Input.touchCount > 0) {
-			// The screen has been touched so store the touch
-			Touch touch = Input.GetTouch (0);
-			if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved) {
-				// If the finger is on the screen, move the object smoothly to the touch position
-				moveHorizontal = (touch.position.x - Screen.width/2)/(Screen.width/2);
-				moveVertical = (touch.position.y - Screen.height/2)/(Screen.height/2);
+		}
+
+		if (keys) {
+			float moveHorizontal = Input.GetAxis ("Horizontal");
+			float moveVertical = Input.GetAxis ("Vertical");
+
+			Vector3 moveVector = new Vector3 (moveHorizontal, 0.0f, moveVertical);
+			Vector3 faceTo = new Vector3 (-moveHorizontal, 0.0f, -moveVertical);
+			if (moveVector != Vector3.zero)
+				transform.rotation = Quaternion.LookRotation (faceTo);
+			rb.velocity = moveVector * 20f;
+		} else {
+			//mouse click or touch, get ray
+			if (Input.GetMouseButton (0) || Input.touchCount > 0) {
+				if (Input.GetMouseButton (0)) {
+					ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+				} else {
+					ray = Camera.main.ScreenPointToRay (Input.touches [0].position);
+				}
+				//identify hit, find the correct hit
+				RaycastHit[] hits;
+				hits = Physics.RaycastAll (ray);
+				for (int i = 0; i < hits.Length; i++) {
+					RaycastHit hit = hits [i];
+					if (hit.collider.name == "floor") {
+						indicateTap (hit);
+						break;
+					}
+				}
+			}
+			//get to that location
+			if ((Mathf.Abs (transform.position.x - tapLocation.x) > 0.1f) || (Mathf.Abs (transform.position.z - tapLocation.z) > 0.1f)) {
+				rb.velocity = (tapLocation - transform.position) * speed;
+			} else {
+				tap.SetActive (false);
 			}
 		}
-		moveVector = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-		Vector3 faceTo = new Vector3 (-moveHorizontal, 0.0f, -moveVertical);
-		if (moveVector != Vector3.zero)
-			transform.rotation = Quaternion.LookRotation(faceTo);
-		rb.velocity =  moveVector * speed;
+		//turn blocked objects transparent
+		makeTransparent ();
 	}
 
 
@@ -119,6 +164,18 @@ public class PlayerController : MonoBehaviour {
 		candycount.text = "Candy " + candynum.ToString () + "/" + candytotal;
 	}
 
+
+
+	//indicate successful tap/click, store and face to that location
+	void indicateTap(RaycastHit hit){
+		tapLocation = hit.point;
+		tapLocation.y = transform.position.y;
+		tap.GetComponent <tapEffect> ().active = true;
+		tap.SetActive (true);
+		tap.transform.position = tapLocation;
+		transform.LookAt (tapLocation);
+	}
+
 	IEnumerator ShowMessage (Text guiText, string message, float delay) {
 		guiText.text = message;
 		guiText.enabled = true;
@@ -126,5 +183,79 @@ public class PlayerController : MonoBehaviour {
 		guiText.enabled = false;
 	}
 
+	//check and make transparency
+	void makeTransparent(){
+		//collect all blocked objects
+		Vector3 fwd = Camera.main.transform.position - transform.position;
+		Vector3 temp = transform.position;
+		RaycastHit[] hits;
+		hits = Physics.RaycastAll (temp, fwd, 50f);
+		newGS = new GameObject[hits.Length];
+		for (int i = 0; i < hits.Length; i++) {
+			newGS [i] = hits[i].collider.gameObject;
+		}
 
+		//old object no longer blocks
+		foreach (GameObject oldG in oldGS){
+			if (!exists (oldG, newGS) && oldG.tag == "environment"){
+				Material m;
+				blockedObjects.TryGetValue(oldG, out m);
+				oldG.GetComponent<MeshRenderer> ().material = m;
+				blockedObjects.Remove (oldG);
+			}
+		}
+
+		//new objects block
+		foreach (GameObject newG in newGS) {
+			if (!exists (newG, oldGS) && newG.tag == "environment") {
+				//change material for the blocking gameobject
+				Material m = newG.GetComponent<MeshRenderer> ().material;
+				blockedObjects.Add (newG, new Material(m));
+				newG.GetComponent<MeshRenderer> ().material = transparent_mat;
+				//convertToTransparent (m);
+			}
+		}
+
+		//update blocked obejcts
+		oldGS = newGS;
+	}
+
+	//change value of texture so object becomes transparent
+	void convertToTransparent(Material m){
+		m.SetFloat ("_Mode", 3);
+		m.SetInt ("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+		m.SetInt ("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+		m.SetInt ("_ZWrite", 0);
+		m.DisableKeyword ("_ALPHATEST_ON");
+		m.DisableKeyword ("_ALPHABLEND_ON");
+		m.EnableKeyword ("_ALPHAPREMULTIPLY_ON");
+		m.renderQueue = 3000;
+	}
+
+	//check of GameObject g in array
+	bool exists(GameObject g, GameObject[] gs){
+		int i = gs.Length;
+		while (--i > 0) {
+			if (g == gs [i])
+				return true;
+		}
+		return false;
+	}
+
+	static ShadowDetector[] gatherShadowObjs(string tag){
+		GameObject[] o = GameObject.FindGameObjectsWithTag(tag);
+		int l = o.Length;
+		ShadowDetector[] s = new ShadowDetector[l];
+		for (int i = 0; i < l; i++) {
+			s [i] = o [i].GetComponent<ShadowDetector> ();
+		}
+		return s;
+	}
+
+	static bool shaded(ShadowDetector[] sd){
+		foreach (ShadowDetector s in sd)
+			if (!s.isShaded)
+				return true;
+		return false;
+	}
 }
