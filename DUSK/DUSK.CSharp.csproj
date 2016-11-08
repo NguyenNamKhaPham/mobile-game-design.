@@ -111,16 +111,17 @@
     <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\Twirl.cs" />
     <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\VignetteAndChromaticAberration.cs" />
     <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\Vortex.cs" />
-    <Compile Include="Assets\LoadTL.cs" />
+    <Compile Include="Assets\LanternBoy_Animation.cs" />
     <Compile Include="Assets\Scripts\Autoturnoff_light.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Scripts\LoadTargetScene_buttoncontrol.cs" />
+    <Compile Include="Assets\Scripts\LoadTL.cs" />
     <Compile Include="Assets\Scripts\LoadingScreenManager.cs" />
     <Compile Include="Assets\Scripts\PauseMenu_Controller.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Rotator.cs" />
     <Compile Include="Assets\Scripts\ShadowDetector.cs" />
     <Compile Include="Assets\Scripts\Start_Menu_Camera_Controller.cs" />
+    <Compile Include="Assets\Scripts\Trigger_Controller.cs" />
     <Compile Include="Assets\Scripts\appliedForce.cs" />
     <Compile Include="Assets\Scripts\auto_move.cs" />
     <Compile Include="Assets\Scripts\enemy1.cs" />
@@ -128,6 +129,10 @@
     <Compile Include="Assets\Scripts\enemy3.cs" />
     <Compile Include="Assets\Scripts\enemy4.cs" />
     <Compile Include="Assets\Scripts\raycastForward.cs" />
+    <Compile Include="Assets\Scripts\tapEffect.cs" />
+    <Compile Include="Assets\WitchAI.cs" />
+    <Compile Include="Assets\animatorLanternBoy.cs" />
+    <Compile Include="Assets\animatorWitch.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Downloads\Free!Low_Poly_Boxy-Stylized_Trees#0\README.txt" />
@@ -198,6 +203,18 @@
     <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\TiltShiftHdrLensBlur.shader" />
     <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\frag_ao.cginc" />
     <None Include="Assets\Models\torch\readme.txt" />
+    <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
+    <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ScreenSpaceRaytrace.cginc" />
+    <None Include="Assets\Standard Assets\Effects\Projectors\Guidelines.txt" />
+    <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorLight.shader" />
+    <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />
+    <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
+    <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularSmooth.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
+    <None Include="Assets\Tim&apos;s Assets\Doors\Shader\BloodyDoor.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

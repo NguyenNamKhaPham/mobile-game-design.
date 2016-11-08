@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7eaf8ac5265e942c5b9e9f5bc2b04d13
-timeCreated: 1478328570
+timeCreated: 1478547573
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -96,9 +96,8 @@ ModelImporter:
     4300000: CrazyHair_Boy:Base_Body_boy_polySurface12
     4300002: Prop_Scythe1:Prop_Scythe1_GeoSphere001_Prop_Scythe1_initialShadingGroup_initialShadingGroup_polySurface27_polySurface25_polySurface21
     4300004: Prop_Lantern:initialShadingGroup_polySurface26
-    7400000: Take 001
+    7400000: Lantern_Boy_Walking
     9500000: //RootNode
-    11100000: //RootNode
     13700000: CrazyHair_Boy:Base_Body_boy_polySurface12
   materials:
     importMaterials: 1
@@ -122,17 +121,17 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Take 001
+      name: Lantern_Boy_Walking
       takeName: Take 001
       firstFrame: 1
       lastFrame: 24
-      wrapMode: 2
+      wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
-      loop: 1
+      loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -232,7 +231,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 1
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
@@ -270,7 +269,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 1
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
