@@ -27,13 +27,13 @@ public class WitchAI : MonoBehaviour
         Vector3 temp = transform.position;
         start = temp;
 
-        temp.x += 29f;
+        temp.x += 10f;
         stop1 = temp;
 
-        temp.z += 36f;
+        temp.z += 50f;
         stop2 = temp;
 
-        temp.x -= 29f;
+        temp.x -= 10f;
         end = temp;
         //set step
         moveStep = moveSpeed * Time.deltaTime;

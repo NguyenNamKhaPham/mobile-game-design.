@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{961CACE0-C1D7-1017-C332-D973C1D9FB87}</ProjectGuid>
+    <ProjectGuid>{3D212ABC-D8CE-F1D3-9764-C9E1D6E77A0B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -84,6 +84,7 @@
      <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\Twirl.cs" />
      <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\VignetteAndChromaticAberration.cs" />
      <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\Vortex.cs" />
+     <Compile Include="Assets\LanternBoy_Animation.cs" />
      <Compile Include="Assets\Scripts\Autoturnoff_light.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\LoadTL.cs" />
@@ -95,6 +96,8 @@
      <Compile Include="Assets\Scripts\Start_Menu_Camera_Controller.cs" />
      <Compile Include="Assets\Scripts\Trigger_Controller.cs" />
      <Compile Include="Assets\Scripts\WitchAI.cs" />
+     <Compile Include="Assets\Scripts\animatorLanternBoy.cs" />
+     <Compile Include="Assets\Scripts\animatorWitch.cs" />
      <Compile Include="Assets\Scripts\appliedForce.cs" />
      <Compile Include="Assets\Scripts\auto_move.cs" />
      <Compile Include="Assets\Scripts\enemy1.cs" />

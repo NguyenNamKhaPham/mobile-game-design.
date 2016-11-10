@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Trigger_Controller : MonoBehaviour {
 
-	public Light controlled_light;
-
+	//public Light controlled_light;
+	public GameObject camera;
 	private bool is_triggered;
 
 	// Use this for initialization
@@ -15,9 +15,7 @@ public class Trigger_Controller : MonoBehaviour {
 	public void Triggered(){
 		if (is_triggered == false) {
 			gameObject.GetComponent<Renderer> ().material.color = Color.green;
-			if (controlled_light.intensity > 0) {
-				controlled_light.gameObject.SetActive(false);
-			}
+			camera.GetComponent<CameraController> ().level2 = true;
 		}
 		is_triggered = true;
 	}
