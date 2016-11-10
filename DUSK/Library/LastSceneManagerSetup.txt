@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/_Scene/DUSK_level_1.unity
+- path: Assets/_Scene/Start_Menu.unity
   isLoaded: 1
   isActive: 1

@@ -160,6 +160,15 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
+	void OnTriggerStay(Collider other){
+		if (other.gameObject.CompareTag ("Rotator_trigger")) {
+			Rotator Rotator_script = other.GetComponent<Rotator>();
+			Rotator_script.rotator_triggered();
+		}
+
+	}
+
+
 	void SetCountText(){
 		candycount.text = "Candy " + candynum.ToString () + "/" + candytotal;
 	}
