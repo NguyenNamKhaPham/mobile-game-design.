@@ -97,9 +97,11 @@ public class WitchAI : MonoBehaviour
 
     void moveTo(Vector3 location)
     {
+        print("inside");
         anim = GetComponent<Animator>();
-        rotating = false;
         anim.SetBool("isWalking", true);
+        rotating = false;
+        
         transform.position = Vector3.MoveTowards(transform.position, location, moveStep);
         //Debug.Log (transform.position);
         //Debug.Log (location);
@@ -117,9 +119,8 @@ public class WitchAI : MonoBehaviour
     void rotation(float a)
     {
         rotating = false;
-        anim.SetBool("isWalking", false);
+        //anim.SetBool("isWalking", false);
         prev = transform.rotation;
-        //anim.SetBool("isTurning", true);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, a, 0f), rotateStep);
         //Debug.Log (transform.rotation);
         //Debug.Log (Quaternion.Euler(0f,a,0f));
