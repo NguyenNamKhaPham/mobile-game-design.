@@ -70,8 +70,8 @@ public class PlayerController : MonoBehaviour {
 	void FixedUpdate () {
 		//hit light
 		if (!sd.isShaded) {
-			Debug.Log ("die");
-			/*
+			//Debug.Log ("die");
+
 			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
 			StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
 			transform.position = original_pos;
@@ -80,10 +80,11 @@ public class PlayerController : MonoBehaviour {
 			for (int i = 0; i < movedObjects.Length; i++) {
 				movedObjects [i].transform.position = movedOjectsPosition [i];
 			}
-			*/
 
+
+		} else {
+			//Debug.Log ("live");
 		}
-
 		if (keys == 0) {
 			speed = 2f;
 			bool a = false;
