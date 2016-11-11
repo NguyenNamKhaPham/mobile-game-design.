@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
 	public int keys;
 
 	//for shadow detection
-	private ShadowDetector[] sds;
+	private ShadowDetector sd;
 
 	//For movement
 	public GameObject tap;
@@ -24,9 +24,10 @@ public class PlayerController : MonoBehaviour {
 	private Ray ray; 
 	private Rigidbody rb;
 	public float speed;
-	public bool moveable = true;
-	private float c = 0.5f;
-	private float d = 1;
+
+	//transparent
+	private ArrayList oldGS = new ArrayList();
+	private GameObject[] newGS;
 
 	//for movable objects
 	GameObject[] movedObjects;
@@ -36,6 +37,9 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		//store original position
 		original_pos = transform.position;
+
+		//shadow detector
+		sd = this.gameObject.GetComponent<ShadowDetector>();
 
 		//for movement
 		tapLocation = transform.position;
@@ -49,10 +53,6 @@ public class PlayerController : MonoBehaviour {
 			movedOjectsPosition [j] = movedObjects [j].transform.position;
 		}
 			
-		//for detect shadow
-		sds = gatherShadowObjs("shadowDetect");
-		Debug.Log (sds.Length);
-
 		ExitWarning.enabled = false;
 
 		if (ending_screen.gameObject.activeInHierarchy == true) {
@@ -69,8 +69,9 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate () {
 		//hit light
-		if (shaded (sds)) {
-			//Debug.Log ("die");
+		if (!sd.isShaded) {
+			Debug.Log ("die");
+			/*
 			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
 			StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
 			transform.position = original_pos;
@@ -79,10 +80,9 @@ public class PlayerController : MonoBehaviour {
 			for (int i = 0; i < movedObjects.Length; i++) {
 				movedObjects [i].transform.position = movedOjectsPosition [i];
 			}
+			*/
 
 		}
-
-
 
 		if (keys == 0) {
 			speed = 2f;
@@ -97,22 +97,8 @@ public class PlayerController : MonoBehaviour {
 				transform.rotation = Quaternion.LookRotation (faceTo);
 			rb.velocity = moveVector * speed;
 		} else if (keys == 1) {
-			//mouse click or touch, get ray
-			if (Input.touchCount == 2 || Input.GetAxis ("Horizontal") != 0) {
-				Vector3 v3 = Camera.main.GetComponent<CameraController> ().offset;
-				if (v3.x > 44.4 || v3.x < -44.4) {
-					c *= -1;
-					d *= -1;
-				}
-				v3.x = ((v3.x + 45 + c) % 90) - 45;
-				float q = v3.z - Mathf.Sqrt (45 * 45 - v3.x * v3.x);
-				v3.z = (((v3.z + 45 - q) % 90) - 45) * d;
-				//Debug.Log (v3);
-				Camera.main.GetComponent<CameraController> ().offset = v3;
-				moveable = false;
-			} 
-			else if ((Input.GetMouseButton (0) || Input.touchCount == 1) && moveable) {
-				if (Input.GetMouseButton (0)) {Debug.Log ("11111");
+			if ((Input.GetMouseButton (0) || Input.touchCount == 1)) {
+				if (Input.GetMouseButton (0)) {
 					ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				} else {
 					ray = Camera.main.ScreenPointToRay (Input.touches [0].position);
@@ -128,9 +114,7 @@ public class PlayerController : MonoBehaviour {
 					}
 				}
 			}
-			if (Input.touchCount == 0) {
-				moveable = true;
-			}
+
 			//get to that location
 			if ((Mathf.Abs (transform.position.x - tapLocation.x) > 0.1f) || (Mathf.Abs (transform.position.z - tapLocation.z) > 0.1f)) {
 				rb.velocity = (tapLocation - transform.position) * speed;
@@ -140,6 +124,7 @@ public class PlayerController : MonoBehaviour {
 		} else if (keys == 2) {
 			
 		}
+		makeTransparent ();
 	}
 
 
@@ -166,11 +151,14 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 
+		if (other.gameObject.CompareTag ("Button_trigger_level1")) {
+			level1Switch Trigger_Controller_script = other.GetComponent<level1Switch>();
+			Trigger_Controller_script.Triggered();
+		}
 		if (other.gameObject.CompareTag ("Button_trigger")) {
 			Trigger_Controller Trigger_Controller_script = other.GetComponent<Trigger_Controller>();
 			Trigger_Controller_script.Triggered();
 		}
-
 
 	}
 
@@ -201,27 +189,59 @@ public class PlayerController : MonoBehaviour {
 	//check of GameObject g in array
 	bool exists(GameObject g, GameObject[] gs){
 		int i = gs.Length;
-		while (--i > 0) {
+		//Debug.Log (i);
+		//Debug.Log (g);
+		while (i > 0) {
+			i -= 1;
+			//Debug.Log (gs[i]);
 			if (g == gs [i])
 				return true;
 		}
 		return false;
 	}
 
-	static ShadowDetector[] gatherShadowObjs(string tag){
-		GameObject[] o = GameObject.FindGameObjectsWithTag(tag);
-		int l = o.Length;
-		ShadowDetector[] s = new ShadowDetector[l];
-		for (int i = 0; i < l; i++) {
-			s [i] = o [i].GetComponent<ShadowDetector> ();
+	//check of GameObject g in array
+	bool exists(GameObject g, ArrayList gs){
+		int i = gs.Count;
+		//Debug.Log (i);
+		//Debug.Log (g);
+		while (i > 0) {
+			i -= 1;
+			//Debug.Log (gs[i]);
+			if (g == gs [i])
+				return true;
 		}
-		return s;
+		return false;
 	}
 
-	static bool shaded(ShadowDetector[] sd){
-		foreach (ShadowDetector s in sd)
-			if (!s.isShaded)
-				return true;
-		return false;
+	void makeTransparent(){
+		//collect all blocked objects
+		Vector3 fwd = Camera.main.transform.position - transform.position;
+		Vector3 temp = transform.position;
+		RaycastHit[] hits;
+		hits = Physics.RaycastAll (temp, fwd, 50f);
+		newGS = new GameObject[hits.Length];
+		for (int i = 0; i < hits.Length; i++) {
+			newGS [i] = hits[i].collider.gameObject;
+		}
+
+		//old object no longer blocks
+		//Debug.Log ("aaaaaaa");
+		foreach (GameObject oldG in oldGS){
+			if (!exists (oldG, newGS) && oldG.tag == "remove"){
+				//Debug.Log (oldG);
+				oldG.GetComponent<MeshRenderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+				oldGS.Remove (oldG);
+			}
+		}
+		//new objects block
+		//Debug.Log ("bbbbbbb");
+		foreach (GameObject newG in newGS) {
+			if (!exists (newG, oldGS) && newG.tag == "remove") {
+				//Debug.Log (newG);
+				oldGS.Add (newG);
+				newG.GetComponent<MeshRenderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+			}
+		}
 	}
 }
