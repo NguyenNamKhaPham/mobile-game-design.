@@ -27,13 +27,13 @@ public class WitchAI : MonoBehaviour
         Vector3 temp = transform.position;
         start = temp;
 
-        temp.x += 29f;
+        temp.x += 10f;
         stop1 = temp;
 
-        temp.z += 36f;
+        temp.z += 50f;
         stop2 = temp;
 
-        temp.x -= 29f;
+        temp.x -= 10f;
         end = temp;
         //set step
         moveStep = moveSpeed * Time.deltaTime;
@@ -117,7 +117,7 @@ public class WitchAI : MonoBehaviour
     void rotation(float a)
     {
         rotating = false;
-        anim.SetBool("isWalking", true);
+        anim.SetBool("isWalking", false);
         prev = transform.rotation;
         //anim.SetBool("isTurning", true);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, a, 0f), rotateStep);

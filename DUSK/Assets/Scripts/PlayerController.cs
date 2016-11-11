@@ -13,23 +13,20 @@ public class PlayerController : MonoBehaviour {
 	public int required_candynum;
 	private int candynum;
 
-	public bool keys = false;
+	public int keys;
 
 	//for shadow detection
 	private ShadowDetector[] sds;
 
-	//transparent
-	private GameObject[] oldGS = new GameObject[0];
-	private GameObject[] newGS;
-	private System.Collections.Generic.Dictionary <GameObject, Material> blockedObjects 
-	= new System.Collections.Generic.Dictionary <GameObject, Material>();
-
 	//For movement
-	private GameObject tap;
+	public GameObject tap;
 	private Vector3 tapLocation;
 	private Ray ray; 
 	private Rigidbody rb;
 	public float speed;
+	public bool moveable = true;
+	private float c = 0.5f;
+	private float d = 1;
 
 	//for movable objects
 	GameObject[] movedObjects;
@@ -41,11 +38,9 @@ public class PlayerController : MonoBehaviour {
 		original_pos = transform.position;
 
 		//for movement
-		tap = GameObject.Find ("tapEffect");
 		tapLocation = transform.position;
 		rb = GetComponent<Rigidbody> ();
 		rb.freezeRotation = true;
-		speed = 2f;
 
 		//store all movable object positions
 		movedObjects = GameObject.FindGameObjectsWithTag("movableObject");
@@ -56,7 +51,7 @@ public class PlayerController : MonoBehaviour {
 			
 		//for detect shadow
 		sds = gatherShadowObjs("shadowDetect");
-		//Debug.Log (sds);
+		Debug.Log (sds.Length);
 
 		ExitWarning.enabled = false;
 
@@ -87,7 +82,12 @@ public class PlayerController : MonoBehaviour {
 
 		}
 
-		if (keys) {
+
+
+		if (keys == 0) {
+			speed = 2f;
+			bool a = false;
+			bool b = false;
 			float moveHorizontal = Input.GetAxis ("Horizontal");
 			float moveVertical = Input.GetAxis ("Vertical");
 
@@ -95,11 +95,24 @@ public class PlayerController : MonoBehaviour {
 			Vector3 faceTo = new Vector3 (-moveHorizontal, 0.0f, -moveVertical);
 			if (moveVector != Vector3.zero)
 				transform.rotation = Quaternion.LookRotation (faceTo);
-			rb.velocity = moveVector * 20f;
-		} else {
+			rb.velocity = moveVector * speed;
+		} else if (keys == 1) {
 			//mouse click or touch, get ray
-			if (Input.GetMouseButton (0) || Input.touchCount > 0) {
-				if (Input.GetMouseButton (0)) {
+			if (Input.touchCount == 2 || Input.GetAxis ("Horizontal") != 0) {
+				Vector3 v3 = Camera.main.GetComponent<CameraController> ().offset;
+				if (v3.x > 44.4 || v3.x < -44.4) {
+					c *= -1;
+					d *= -1;
+				}
+				v3.x = ((v3.x + 45 + c) % 90) - 45;
+				float q = v3.z - Mathf.Sqrt (45 * 45 - v3.x * v3.x);
+				v3.z = (((v3.z + 45 - q) % 90) - 45) * d;
+				//Debug.Log (v3);
+				Camera.main.GetComponent<CameraController> ().offset = v3;
+				moveable = false;
+			} 
+			else if ((Input.GetMouseButton (0) || Input.touchCount == 1) && moveable) {
+				if (Input.GetMouseButton (0)) {Debug.Log ("11111");
 					ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				} else {
 					ray = Camera.main.ScreenPointToRay (Input.touches [0].position);
@@ -115,15 +128,18 @@ public class PlayerController : MonoBehaviour {
 					}
 				}
 			}
+			if (Input.touchCount == 0) {
+				moveable = true;
+			}
 			//get to that location
 			if ((Mathf.Abs (transform.position.x - tapLocation.x) > 0.1f) || (Mathf.Abs (transform.position.z - tapLocation.z) > 0.1f)) {
 				rb.velocity = (tapLocation - transform.position) * speed;
 			} else {
 				tap.SetActive (false);
 			}
+		} else if (keys == 2) {
+			
 		}
-		//turn blocked objects transparent
-		makeTransparent ();
 	}
 
 
@@ -180,51 +196,7 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSeconds(delay);
 		guiText.enabled = false;
 	}
-
-	//check and make transparency
-	void makeTransparent(){
-		//collect all blocked objects
-		Vector3 fwd = Camera.main.transform.position - transform.position;
-		Vector3 temp = transform.position;
-		RaycastHit[] hits;
-		hits = Physics.RaycastAll (temp, fwd, 50f);
-		newGS = new GameObject[hits.Length];
-		for (int i = 0; i < hits.Length; i++) {
-			newGS [i] = hits[i].collider.gameObject;
-		}
-
-		//old object no longer blocks
-		foreach (GameObject oldG in oldGS){
-			if (!exists (oldG, newGS) && oldG.tag == "environment"){
-				Material m;
-				blockedObjects.TryGetValue(oldG, out m);
-				oldG.GetComponent<MeshRenderer> ().material = m;
-				blockedObjects.Remove (oldG);
-			}
-		}
-		//new objects block
-		foreach (GameObject newG in newGS) {
-			if (!exists (newG, oldGS) && newG.tag == "environment") {
-				Material m = newG.GetComponent<MeshRenderer> ().material;
-				blockedObjects.Add (newG, new Material(m));
-				convertToTransparent (m);
-			}
-		}
-		//update blocked obejcts
-		oldGS = newGS;
-	}
-
-	//change value of texture so object becomes transparent
-	void convertToTransparent(Material m){
-		m.SetFloat ("_Mode", 3);
-		m.SetInt ("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-		m.SetInt ("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-		m.SetInt ("_ZWrite", 0);
-		m.DisableKeyword ("_ALPHATEST_ON");
-		m.DisableKeyword ("_ALPHABLEND_ON");
-		m.EnableKeyword ("_ALPHAPREMULTIPLY_ON");
-		m.renderQueue = 3000;
-	}
+		
 
 	//check of GameObject g in array
 	bool exists(GameObject g, GameObject[] gs){

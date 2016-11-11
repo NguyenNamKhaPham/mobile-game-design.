@@ -13,7 +13,6 @@ public class warningSystem : MonoBehaviour {
 	void Start () {
 		p = GameObject.FindGameObjectWithTag ("smoke").GetComponent<ParticleSystem> ();
 		p.Stop ();
-		Debug.Log ("0000000");
 		//for near-light warning
 		sdWarning = gatherShadowObjs("warning");
 		sdWarning1 = gatherShadowObjs("warning1");
@@ -25,7 +24,6 @@ public class warningSystem : MonoBehaviour {
 	void FixedUpdate () {
 		//nearer light
 		if (shaded (sdWarning1)) {
-			Debug.Log ("111111");
 			p.startSize = 5;
 			if (p.isStopped) {
 				p.Play ();
@@ -34,13 +32,11 @@ public class warningSystem : MonoBehaviour {
 		//near light
 		else if (shaded (sdWarning)) {
 			p.startSize = 10;
-			Debug.Log ("2222");
 			if (p.isStopped) {
 				
 				p.Play ();
 			}
 		} else {
-			Debug.Log ("3333333");
 			if (p.isPlaying) {
 				
 				p.Stop ();
