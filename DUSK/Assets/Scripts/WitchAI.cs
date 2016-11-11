@@ -97,7 +97,7 @@ public class WitchAI : MonoBehaviour
 
     void moveTo(Vector3 location)
     {
-        print("inside");
+        //print("inside");
         anim = GetComponent<Animator>();
         anim.SetBool("isWalking", true);
         rotating = false;

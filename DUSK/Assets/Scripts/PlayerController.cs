@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour {
 		//hit light
 		if (!sd.isShaded) {
 			//Debug.Log ("die");
+
 			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
 			StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
 			transform.position = original_pos;
@@ -80,8 +81,10 @@ public class PlayerController : MonoBehaviour {
 				movedObjects [i].transform.position = movedOjectsPosition [i];
 			}
 
-		}
 
+		} else {
+			//Debug.Log ("live");
+		}
 		if (keys == 0) {
 			speed = 2f;
 			bool a = false;
@@ -96,7 +99,7 @@ public class PlayerController : MonoBehaviour {
 			rb.velocity = moveVector * speed;
 		} else if (keys == 1) {
 			if ((Input.GetMouseButton (0) || Input.touchCount == 1)) {
-				if (Input.GetMouseButton (0)) {Debug.Log ("11111");
+				if (Input.GetMouseButton (0)) {
 					ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				} else {
 					ray = Camera.main.ScreenPointToRay (Input.touches [0].position);
