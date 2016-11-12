@@ -132,6 +132,7 @@
     <Compile Include="Assets\Scripts\enemy2.cs" />
     <Compile Include="Assets\Scripts\enemy3.cs" />
     <Compile Include="Assets\Scripts\enemy4.cs" />
+    <Compile Include="Assets\Scripts\level1Switch.cs" />
     <Compile Include="Assets\Scripts\raycastForward.cs" />
     <Compile Include="Assets\Scripts\tapEffect.cs" />
     <Compile Include="Assets\Scripts\warningSystem.cs" />
