@@ -18,7 +18,7 @@ public class WitchAI : MonoBehaviour
     private float rotateStep;
     private bool rotating;
     private bool rot;
-    private Quaternion prev;
+    //private Quaternion prev;
     private int stage = 0;
     private bool isUp;
     private bool rotateDown;
@@ -50,7 +50,7 @@ public class WitchAI : MonoBehaviour
         isUp = true;
         rotateDown = false;
         subStage = true;
-        finish = true;
+        finish = false;
     }
 
     void Update()
@@ -62,36 +62,37 @@ public class WitchAI : MonoBehaviour
             {
                 
                 moveTo(stop1);
-                print("stop1");
+                //print("stop1");
             }
             else if (stage == 1)
             {
                 isUp = false;
                 rotation(180f);
-                print("180");
+                //print("180");
             }
             else if (stage == 2)
             {
                 
                 moveTo(start);
-                print("start");
+                //print("start");
             }
             else if (stage == 3)
             {   
                 isUp = true;
                 rotation(0f);
-                print("0");
+                //print("0");
             }
         }
         //pathFlag == 1 stop
         else if(pathFlag == 2)
         {   
+			print("11111111");
             if (subStage)
             {
                 stage = 0;
                 subStage = false;
             }
-            if (stage == 0)
+            else if (stage == 0)
             {
                 rotatePath();
             }
@@ -116,13 +117,14 @@ public class WitchAI : MonoBehaviour
                 subStage = true;
             }
             //move to path
-            print(stage);
+            //print(stage);
             if (stage == 0)
             {
                 moveTo(end);
             }
             else if (stage == 1)
             {
+				finish = true;
                 rotation(90f);
             }
             else if (stage == 2)
@@ -132,7 +134,7 @@ public class WitchAI : MonoBehaviour
             else if (stage == 3)
             {
                 rotation(-90f);
-                finish = false;
+                
             }
         }
 
@@ -174,7 +176,7 @@ public class WitchAI : MonoBehaviour
     {
         rotating = false;
         //anim.SetBool("isWalking", false);
-        prev = transform.rotation;
+        //prev = transform.rotation;
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, a, 0f), rotateStep);
         //Debug.Log (transform.rotation);
         //Debug.Log (Quaternion.Euler(0f,a,0f));

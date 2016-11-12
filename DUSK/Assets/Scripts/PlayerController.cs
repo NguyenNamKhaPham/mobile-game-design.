@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour {
 	public int required_candynum;
 	private int candynum;
 
-	public int keys;
+	public bool keys;
 
 	//for shadow detection
 	private ShadowDetector sd;
@@ -24,10 +24,6 @@ public class PlayerController : MonoBehaviour {
 	private Ray ray; 
 	private Rigidbody rb;
 	public float speed;
-
-	//transparent
-	private ArrayList oldGS = new ArrayList();
-	private GameObject[] newGS;
 
 	//for movable objects
 	GameObject[] movedObjects;
@@ -66,8 +62,7 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
-
-	void FixedUpdate () {
+	void Update(){
 		//hit light
 		if (!sd.isShaded) {
 			//Debug.Log ("die");
@@ -85,19 +80,12 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			//Debug.Log ("live");
 		}
-		if (keys == 0) {
-			speed = 2f;
-			bool a = false;
-			bool b = false;
-			float moveHorizontal = Input.GetAxis ("Horizontal");
-			float moveVertical = Input.GetAxis ("Vertical");
+	}
 
-			Vector3 moveVector = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-			Vector3 faceTo = new Vector3 (-moveHorizontal, 0.0f, -moveVertical);
-			if (moveVector != Vector3.zero)
-				transform.rotation = Quaternion.LookRotation (faceTo);
-			rb.velocity = moveVector * speed;
-		} else if (keys == 1) {
+
+	void FixedUpdate () {
+		
+		if (keys) {
 			if ((Input.GetMouseButton (0) || Input.touchCount == 1)) {
 				if (Input.GetMouseButton (0)) {
 					ray = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -122,10 +110,7 @@ public class PlayerController : MonoBehaviour {
 			} else {
 				tap.SetActive (false);
 			}
-		} else if (keys == 2) {
-			
 		}
-		makeTransparent ();
 	}
 
 
@@ -138,7 +123,7 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//Exit Level
-		if (other.gameObject.CompareTag ("Exittrigger")) {
+		else if (other.gameObject.CompareTag ("Exittrigger")) {
 			
 			if (candynum >= required_candynum) {
 				Time.timeScale = 0;
@@ -152,13 +137,13 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 
-		if (other.gameObject.CompareTag ("Button_trigger_level1")) {
-			level1Switch Trigger_Controller_script = other.GetComponent<level1Switch>();
-			Trigger_Controller_script.Triggered();
+		else if (other.gameObject.CompareTag ("Button_trigger_level1")) {
+			other.GetComponent<level1Switch>().Triggered();
 		}
-		if (other.gameObject.CompareTag ("Button_trigger")) {
-			Trigger_Controller Trigger_Controller_script = other.GetComponent<Trigger_Controller>();
-			Trigger_Controller_script.Triggered();
+		else if (other.gameObject.CompareTag ("Button_trigger")) {
+			keys = false;
+			tapLocation = transform.position;
+			other.GetComponent<Trigger_Controller>().Triggered();
 		}
 
 	}
@@ -188,61 +173,7 @@ public class PlayerController : MonoBehaviour {
 		
 
 	//check of GameObject g in array
-	bool exists(GameObject g, GameObject[] gs){
-		int i = gs.Length;
-		//Debug.Log (i);
-		//Debug.Log (g);
-		while (i > 0) {
-			i -= 1;
-			//Debug.Log (gs[i]);
-			if (g == gs [i])
-				return true;
-		}
-		return false;
-	}
 
-	//check of GameObject g in array
-	bool exists(GameObject g, ArrayList gs){
-		int i = gs.Count;
-		//Debug.Log (i);
-		//Debug.Log (g);
-		while (i > 0) {
-			i -= 1;
-			//Debug.Log (gs[i]);
-			if (g == gs [i])
-				return true;
-		}
-		return false;
-	}
 
-	void makeTransparent(){
-		//collect all blocked objects
-		Vector3 fwd = Camera.main.transform.position - transform.position;
-		Vector3 temp = transform.position;
-		RaycastHit[] hits;
-		hits = Physics.RaycastAll (temp, fwd, 50f);
-		newGS = new GameObject[hits.Length];
-		for (int i = 0; i < hits.Length; i++) {
-			newGS [i] = hits[i].collider.gameObject;
-		}
 
-		//old object no longer blocks
-		//Debug.Log ("aaaaaaa");
-		foreach (GameObject oldG in oldGS){
-			if (!exists (oldG, newGS) && oldG.tag == "remove"){
-				//Debug.Log (oldG);
-				oldG.GetComponent<MeshRenderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-				oldGS.Remove (oldG);
-			}
-		}
-		//new objects block
-		//Debug.Log ("bbbbbbb");
-		foreach (GameObject newG in newGS) {
-			if (!exists (newG, oldGS) && newG.tag == "remove") {
-				//Debug.Log (newG);
-				oldGS.Add (newG);
-				newG.GetComponent<MeshRenderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-			}
-		}
-	}
 }
