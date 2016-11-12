@@ -6,7 +6,6 @@ public class animatorWitch : MonoBehaviour {
     Animator anim;
     public bool isWalking = false;
     public bool isScanning = false;
-    public bool isDetect = false;
 
 	// Use this for initialization
 	void Start () {
@@ -15,15 +14,6 @@ public class animatorWitch : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        
-        if (isDetect)
-        {
-            anim.SetBool("isDetect", true);
-        }
-        else
-        {
-            anim.SetBool("isDetect", false);
-        }
 			
         if (isWalking)
         {
