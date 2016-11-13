@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour {
 	private Ray ray; 
 	private Rigidbody rb;
 	public float speed;
+    public bool deathSet;
 
 	//for movable objects
 	GameObject[] movedObjects;
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour {
 		SetCountText ();
 		candynum = 0;
 
+        deathSet = false;
 
 	}
 
@@ -67,19 +69,20 @@ public class PlayerController : MonoBehaviour {
 		if (!sd.isShaded) {
 			//Debug.Log ("die");
 
-			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
-			StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
-			transform.position = original_pos;
-			tapLocation = original_pos;
-			rb.velocity = Vector3.zero;
-			for (int i = 0; i < movedObjects.Length; i++) {
-				movedObjects [i].transform.position = movedOjectsPosition [i];
-			}
+            playDeathAnimation(true);
+            print("dead");
+            StartCoroutine(respawn());
+            
 
-
-		} else {
-			//Debug.Log ("live");
-		}
+        } else {
+            //Debug.Log ("live");
+            if (deathSet)
+            {
+                playDeathAnimation(false);
+                deathSet = false;
+                print("alive");
+            }
+        }
 	}
 
 
@@ -170,10 +173,36 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSeconds(delay);
 		guiText.enabled = false;
 	}
-		
 
-	//check of GameObject g in array
 
+    //check of GameObject g in array
+
+    //pop up warning, pumpkin stops and resqpawns, movable objects respawn
+    IEnumerator respawn()
+    {
+        //StartCoroutine(ShowMessage(ExitWarning, "You Shall Not Embrace the Light", 4));
+        print(Time.time);
+        yield return new WaitForSeconds(3);
+        transform.position = original_pos;
+        tapLocation = original_pos;
+        rb.velocity = Vector3.zero;
+        for (int i = 0; i < movedObjects.Length; i++)
+        {
+            movedObjects[i].transform.position = movedOjectsPosition[i];
+        }
+        print(Time.time);
+    }
+
+    void playDeathAnimation(bool setValue)
+    {
+        GameObject pumpkin = GameObject.FindGameObjectWithTag("pumpkin");
+        Animator anim = pumpkin.GetComponent<Animator>();
+        anim.SetBool("isDead", setValue);
+        if (!deathSet)
+        {
+            deathSet = true;
+        }
+    }
 
 
 }
