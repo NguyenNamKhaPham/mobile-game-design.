@@ -108,7 +108,7 @@ public class CameraController : MonoBehaviour {
     }
 
 	IEnumerator wait(float f){
-		Debug.Log (i);
+		//Debug.Log (i);
 		yield return new WaitForSeconds (f);
 		if (q) {
 			i++; 
@@ -118,14 +118,14 @@ public class CameraController : MonoBehaviour {
 
 	void makeTransparent(){
 		//collect all blocked objects
-		Debug.DrawRay(transform.position, transform.position - offset, Color.green);
+		//Debug.DrawRay(transform.position, transform.position - offset, Color.green);
 		RaycastHit[] hits;
 		hits = Physics.RaycastAll (transform.position, -offset, 100f);
 		newGS = new GameObject[hits.Length];
 		for (int i = 0; i < hits.Length; i++) {
 			newGS [i] = hits[i].collider.gameObject;
 		}
-		Debug.Log (hits.Length);
+		//Debug.Log (hits.Length);
 		ArrayList t = new ArrayList();
 		//old object no longer blocks
 		//Debug.Log ("aaaaaaa");

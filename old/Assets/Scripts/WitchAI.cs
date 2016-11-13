@@ -86,7 +86,7 @@ public class WitchAI : MonoBehaviour
         //pathFlag == 1 stop
         else if(pathFlag == 2)
         {   
-			print("11111111");
+			//print("11111111");
             if (subStage)
             {
                 stage = 0;
