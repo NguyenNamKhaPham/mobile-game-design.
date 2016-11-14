@@ -16,7 +16,7 @@ public class Rotator : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		if (!use_trigger) {
-			rotate_object.transform.Rotate (new Vector3 (speedx, speedy, speedz) * Time.deltaTime);
+			transform.Rotate (new Vector3 (speedx, speedy, speedz) * Time.deltaTime);
 		}
 	}
 

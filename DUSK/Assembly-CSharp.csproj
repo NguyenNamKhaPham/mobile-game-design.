@@ -84,6 +84,8 @@
      <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\Twirl.cs" />
      <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\VignetteAndChromaticAberration.cs" />
      <Compile Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Scripts\Vortex.cs" />
+     <Compile Include="Assets\InstantiateWitch.cs" />
+     <Compile Include="Assets\LanternBoy_Animation.cs" />
      <Compile Include="Assets\Scripts\Autoturnoff_light.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\LoadTL.cs" />
@@ -95,15 +97,20 @@
      <Compile Include="Assets\Scripts\Start_Menu_Camera_Controller.cs" />
      <Compile Include="Assets\Scripts\Trigger_Controller.cs" />
      <Compile Include="Assets\Scripts\WitchAI.cs" />
+     <Compile Include="Assets\Scripts\animatorLanternBoy.cs" />
+     <Compile Include="Assets\Scripts\animatorWitch.cs" />
      <Compile Include="Assets\Scripts\appliedForce.cs" />
      <Compile Include="Assets\Scripts\auto_move.cs" />
      <Compile Include="Assets\Scripts\enemy1.cs" />
      <Compile Include="Assets\Scripts\enemy2.cs" />
      <Compile Include="Assets\Scripts\enemy3.cs" />
      <Compile Include="Assets\Scripts\enemy4.cs" />
+     <Compile Include="Assets\Scripts\level1Switch.cs" />
      <Compile Include="Assets\Scripts\raycastForward.cs" />
      <Compile Include="Assets\Scripts\tapEffect.cs" />
      <Compile Include="Assets\Scripts\warningSystem.cs" />
+     <Compile Include="Assets\Trigger_Controller_lvl3.cs" />
+     <Compile Include="Assets\clipping_controller.cs" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\SeparableWeightedBlurDof34.shader" />
@@ -128,7 +135,6 @@
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Apply.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\frag_ao.cginc" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfField34.shader" />
-     <None Include="Assets\Transparent Shader.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MobileBlur.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\SSAOShader.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\ConvertDepth.shader" />

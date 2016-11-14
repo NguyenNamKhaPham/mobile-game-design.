@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 2de91ccd70fe449c4b4019efe32a8478
-timeCreated: 1478328569
+guid: b47bd010649014094b0b6156022c8108
+timeCreated: 1478802732
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -96,9 +96,8 @@ ModelImporter:
     4300000: Chara_Witch1:polySurface36
     4300002: Prop_Knife:initialShadingGroup_polySurface15
     4300004: Prop_Candle:initialShadingGroup_polySurface24
-    7400000: Take 001
+    7400000: Witch SlashAttack
     9500000: //RootNode
-    11100000: //RootNode
     13700000: Chara_Witch1:polySurface36
   materials:
     importMaterials: 1
@@ -122,15 +121,15 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Take 001
+      name: Witch SlashAttack
       takeName: Take 001
       firstFrame: 1
       lastFrame: 25
-      wrapMode: 2
+      wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
-      loop: 1
+      loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
@@ -270,7 +269,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 1
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
