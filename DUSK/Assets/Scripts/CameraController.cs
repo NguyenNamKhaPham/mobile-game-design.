@@ -24,6 +24,7 @@ public class CameraController : MonoBehaviour {
 	public Vector3 doorPos;
 	public GameObject magic;
 	public GameObject pointToDoor;
+	private int oldFlag;
 	public int j;
 
 	//transparent
@@ -38,7 +39,7 @@ public class CameraController : MonoBehaviour {
 		transform.LookAt (pumkinPos);
 		v = l1.gameObject.transform.position;
 		v.y = transform.position.y;
-		v.z -= 15f;
+		v.z -= 30f;
 		l2 = GameObject.Find ("Witch_Model_Prefab(Clone)");
 		w = l2.GetComponent<WitchAI> ();
 	}
@@ -63,6 +64,8 @@ public class CameraController : MonoBehaviour {
 
 	void unlock(){
 		if (j == 0) {
+			oldFlag = w.pathFlag;
+			w.pathFlag = 1;
 			s = transform.position;
 			doorPos = door.transform.position;
 			doorPos.y += 35;
@@ -104,6 +107,7 @@ public class CameraController : MonoBehaviour {
 				unlockALock = false;
 				GameObject.Find ("Player").GetComponent<PlayerController> ().keys = true;
 				j = 0;
+				w.pathFlag = oldFlag;
 			}
 		}
 
@@ -196,6 +200,7 @@ public class CameraController : MonoBehaviour {
 
 	void switchOfflevel2(){
 		if (i == 0) {
+			w.pathFlag = 1;
 			s = transform.position;
 			i++;
 			q = true;
@@ -213,12 +218,11 @@ public class CameraController : MonoBehaviour {
 			q = true;
 			StartCoroutine_Auto (wait (1));
 		} else if (i == 6) {
-			w.pathFlag = 1;
 			i++;
 		} else if (i == 7) {
 			v1 = l2.transform.position;
-			v1.y += 40f;
-			v1.z -= 23f;
+			v1.y += 50f;
+			v1.z -= 35f;
 			i++;
 		} else if (i == 8) {
 			transform.position = Vector3.MoveTowards (transform.position, v1, 100f * Time.deltaTime);
@@ -235,8 +239,8 @@ public class CameraController : MonoBehaviour {
 			i++;
 		} else if (i == 12) {
 			v1 = l2.transform.position;
-			v1.y += 40f;
-			v1.x -= 23f;
+			v1.y += 50f;
+			v1.z -= 35f;
 			transform.position = Vector3.MoveTowards (transform.position, v1, 30f * Time.deltaTime);
 			if (w.finish) {
 				i++;

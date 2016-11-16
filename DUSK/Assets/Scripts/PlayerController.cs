@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour {
 		if (!sd.isShaded) {
 			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
 			if (test_mode) {
+				print ("11111");
 				StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
 				keys = false;
 				d = Vector3.zero;
