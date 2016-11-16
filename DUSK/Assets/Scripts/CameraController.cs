@@ -23,6 +23,7 @@ public class CameraController : MonoBehaviour {
 	public GameObject door;
 	public Vector3 doorPos;
 	public GameObject magic;
+	public GameObject pointToDoor;
 	public int j;
 
 	//transparent
@@ -54,14 +55,13 @@ public class CameraController : MonoBehaviour {
 			pumkinPos = Player.transform.position;
 			transform.position = pumkinPos + offset;
 			transform.LookAt (pumkinPos);
+			pointToDoor.transform.LookAt (door.transform.position);
 			//Debug.Log (offset);
 		}
-
     }
 
 
 	void unlock(){
-		print (j);
 		if (j == 0) {
 			s = transform.position;
 			doorPos = door.transform.position;
@@ -69,18 +69,18 @@ public class CameraController : MonoBehaviour {
 			doorPos.z -= 40;
 			j++;
 			q = true;
-			StartCoroutine_Auto (wait1 (1));
+			StartCoroutine_Auto (wait1 (0.5f));
 		} else if (j == 2) {
 			transform.position = Vector3.MoveTowards (transform.position, doorPos, 100f * Time.deltaTime);
 			if ((Mathf.Abs (transform.position.x - doorPos.x) < 0.1f) && (Mathf.Abs (transform.position.z - doorPos.z) < 0.1f)) {
 				j++;
 				q = true;
-				StartCoroutine_Auto (wait1 (1));
+				StartCoroutine_Auto (wait1 (0.5f));
 			}
 		} else if (j == 4) {
 			if (lock1.activeSelf) {
 				lock1.GetComponent<Animator> ().SetBool ("isUnlocked", true);
-				StartCoroutine_Auto (unlockAni (1, 1));
+				StartCoroutine_Auto (unlockAni (1.5f, 1));
 				j++;
 				q = true;
 				StartCoroutine_Auto (wait1 (2));
@@ -199,7 +199,7 @@ public class CameraController : MonoBehaviour {
 			s = transform.position;
 			i++;
 			q = true;
-			StartCoroutine_Auto (wait (1));
+			StartCoroutine_Auto (wait (0.5f));
 		} else if (i == 2) {
 			transform.position = Vector3.MoveTowards (transform.position, v, 100f * Time.deltaTime);
 			if ((Mathf.Abs (transform.position.x - v.x) < 0.1f) && (Mathf.Abs (transform.position.z - v.z) < 0.1f)) {
