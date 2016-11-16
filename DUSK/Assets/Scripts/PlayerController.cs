@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour {
 			if(test_mode){
 				StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
 				keys = false;
+				d = Vector3.zero;
 				rb.velocity = Vector3.zero;
 				anim.SetBool ("isDead", true);
 				StartCoroutine (respawn ());   
@@ -146,7 +147,7 @@ public class PlayerController : MonoBehaviour {
 				}
 
 			} else {
-				StartCoroutine (ShowMessage (ExitWarning, "Need More Candies For Gate Opening", 3));
+				StartCoroutine (ShowMessage (ExitWarning, "CANDY PLEASE", 3));
 			}
 		}
 
@@ -204,6 +205,7 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSeconds(2);
 		tapLocation = original_pos;
 		keys = true;
+		d = Vector3.zero;
 		transform.position = original_pos;
 		for (int i = 0; i < movedObjects.Length; i++)
 		{
