@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{149603E6-C035-1636-2A8D-A23F624DB945}") = "old", "Assembly-CSharp.csproj", "{BA0ABEC2-7AD5-65AC-ADEF-FA49B2E6C067}"
+EndProject
+Project("{149603E6-C035-1636-2A8D-A23F624DB945}") = "old", "Assembly-UnityScript.unityproj", "{62298AF0-5571-8F03-FEEB-DCE4C04D3069}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA0ABEC2-7AD5-65AC-ADEF-FA49B2E6C067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA0ABEC2-7AD5-65AC-ADEF-FA49B2E6C067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA0ABEC2-7AD5-65AC-ADEF-FA49B2E6C067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA0ABEC2-7AD5-65AC-ADEF-FA49B2E6C067}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62298AF0-5571-8F03-FEEB-DCE4C04D3069}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62298AF0-5571-8F03-FEEB-DCE4C04D3069}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62298AF0-5571-8F03-FEEB-DCE4C04D3069}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62298AF0-5571-8F03-FEEB-DCE4C04D3069}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
