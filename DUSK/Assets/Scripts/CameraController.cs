@@ -24,7 +24,6 @@ public class CameraController : MonoBehaviour {
 	public Vector3 doorPos;
 	public GameObject magic;
 	public GameObject pointToDoor;
-	private int oldFlag;
 	public int j;
 
 	//transparent
@@ -64,8 +63,6 @@ public class CameraController : MonoBehaviour {
 
 	void unlock(){
 		if (j == 0) {
-			oldFlag = w.pathFlag;
-			w.pathFlag = 1;
 			s = transform.position;
 			doorPos = door.transform.position;
 			doorPos.y += 35;
@@ -107,7 +104,6 @@ public class CameraController : MonoBehaviour {
 				unlockALock = false;
 				GameObject.Find ("Player").GetComponent<PlayerController> ().keys = true;
 				j = 0;
-				w.pathFlag = oldFlag;
 			}
 		}
 

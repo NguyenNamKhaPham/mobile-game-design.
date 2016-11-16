@@ -74,7 +74,6 @@ public class PlayerController : MonoBehaviour {
 		if (!sd.isShaded) {
 			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
 			if (test_mode) {
-				print ("11111");
 				StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
 				keys = false;
 				d = Vector3.zero;
@@ -110,15 +109,9 @@ public class PlayerController : MonoBehaviour {
 					}
 				}
 			}
-			d = (tapLocation - transform.position).normalized;
-			d.y = 0f;
+			d = (tapLocation - transform.position);
 		}
-		if ((Mathf.Abs (transform.position.x - tapLocation.x) < 0.55f) && (Mathf.Abs (transform.position.z - tapLocation.z) < 0.55f)) {
-			d = Vector3.zero;
-			rb.MovePosition (tapLocation);
-		} else {
-			rb.MovePosition (transform.position + d * Time.deltaTime * speed);
-		}
+		rb.velocity = (tapLocation - transform.position) * speed;
 	}
 
 
@@ -202,7 +195,7 @@ public class PlayerController : MonoBehaviour {
 		//print(Time.time);
 		yield return new WaitForSeconds(2);
 		tapLocation = original_pos;
-		d = Vector3.zero;
+		rb.velocity = Vector3.zero;
 		keys = true;
 		transform.position = original_pos;
 		for (int i = 0; i < movedObjects.Length; i++)
