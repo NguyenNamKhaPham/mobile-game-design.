@@ -55,7 +55,7 @@ public class CameraController : MonoBehaviour {
 			pumkinPos = Player.transform.position;
 			transform.position = pumkinPos + offset;
 			transform.LookAt (pumkinPos);
-			pointToDoor.transform.LookAt (door.transform.position);
+			pointToDoor.transform.LookAt (lock2.transform.position);
 			//Debug.Log (offset);
 		}
     }
@@ -65,8 +65,8 @@ public class CameraController : MonoBehaviour {
 		if (j == 0) {
 			s = transform.position;
 			doorPos = door.transform.position;
-			doorPos.y += 50;
-			doorPos.z -= 40;
+			doorPos.y += 35;
+			doorPos.z -= 35;
 			j++;
 			q = true;
 			StartCoroutine_Auto (wait1 (0.5f));
@@ -218,7 +218,7 @@ public class CameraController : MonoBehaviour {
 		} else if (i == 7) {
 			v1 = l2.transform.position;
 			v1.y += 40f;
-			v1.x -= 23f;
+			v1.z -= 23f;
 			i++;
 		} else if (i == 8) {
 			transform.position = Vector3.MoveTowards (transform.position, v1, 100f * Time.deltaTime);

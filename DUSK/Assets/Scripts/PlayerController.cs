@@ -73,9 +73,10 @@ public class PlayerController : MonoBehaviour {
 		//hit light
 		if (!sd.isShaded) {
 			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
-			if(test_mode){
+			if (test_mode) {
 				StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
 				keys = false;
+				d = Vector3.zero;
 				rb.velocity = Vector3.zero;
 				anim.SetBool ("isDead", true);
 				StartCoroutine (respawn ());   
@@ -84,11 +85,6 @@ public class PlayerController : MonoBehaviour {
 				pause_button.gameObject.SetActive (false);
 				Time.timeScale = 0;
 			}
-
-
-
-		} else {
-			//Debug.Log ("live");
 		}
 	}
 
@@ -114,12 +110,14 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 			d = (tapLocation - transform.position).normalized;
+			d.y = 0f;
 		}
-
-		if ((Mathf.Abs (transform.position.x - tapLocation.x) < 0.5f) && (Mathf.Abs (transform.position.z - tapLocation.z) < 0.5f)) {
+		if ((Mathf.Abs (transform.position.x - tapLocation.x) < 0.55f) && (Mathf.Abs (transform.position.z - tapLocation.z) < 0.55f)) {
 			d = Vector3.zero;
+			rb.MovePosition (tapLocation);
+		} else {
+			rb.MovePosition (transform.position + d * Time.deltaTime * speed);
 		}
-		rb.MovePosition (transform.position + d * Time.deltaTime * speed);
 	}
 
 
@@ -146,7 +144,7 @@ public class PlayerController : MonoBehaviour {
 				}
 
 			} else {
-				StartCoroutine (ShowMessage (ExitWarning, "Need More Candies For Gate Opening", 3));
+				StartCoroutine (ShowMessage (ExitWarning, "CANDY PLEASE", 3));
 			}
 		}
 
@@ -203,6 +201,7 @@ public class PlayerController : MonoBehaviour {
 		//print(Time.time);
 		yield return new WaitForSeconds(2);
 		tapLocation = original_pos;
+		d = Vector3.zero;
 		keys = true;
 		transform.position = original_pos;
 		for (int i = 0; i < movedObjects.Length; i++)
