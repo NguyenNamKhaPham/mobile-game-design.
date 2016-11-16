@@ -43,7 +43,7 @@ public class Trigger_Controller : MonoBehaviour {
 		} 
 
 
-		if (trigger_active = true) {
+		if (trigger_active) {
 			gameObject.GetComponent<Renderer> ().material.color = Color.green;
 			camera.GetComponent<CameraController> ().level2 = true;
 		}

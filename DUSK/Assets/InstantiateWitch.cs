@@ -8,7 +8,7 @@ public class InstantiateWitch : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Instantiate(witchPrefab, witchPosition.position, witchPosition.rotation);
+        Instantiate(witchPrefab, witchPosition.position, Quaternion.Euler(new Vector3(0f,90f,0)));
         
 	}
 	

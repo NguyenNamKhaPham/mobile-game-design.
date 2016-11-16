@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour {
 
 	public bool keys;
 	public bool test_mode;
+	private bool notActivate = true;
+	private Animator anim;
 
 	//for shadow detection
 	private ShadowDetector sd;
@@ -26,6 +28,7 @@ public class PlayerController : MonoBehaviour {
 	private Ray ray; 
 	private Rigidbody rb;
 	public float speed;
+	private Vector3 d;
 
 	//for movable objects
 	GameObject[] movedObjects;
@@ -50,7 +53,9 @@ public class PlayerController : MonoBehaviour {
 		for (int j = 0; j < movedObjects.Length; j++) {
 			movedOjectsPosition [j] = movedObjects [j].transform.position;
 		}
-			
+
+		anim = GameObject.FindGameObjectWithTag("pumpkin").GetComponent<Animator>();
+
 		ExitWarning.enabled = false;
 
 		if (ending_screen.gameObject.activeInHierarchy == true) {
@@ -67,17 +72,13 @@ public class PlayerController : MonoBehaviour {
 	void Update(){
 		//hit light
 		if (!sd.isShaded) {
-			//Debug.Log ("die");
-
 			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
 			if(test_mode){
 				StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
-				transform.position = original_pos;
-				tapLocation = original_pos;
+				keys = false;
 				rb.velocity = Vector3.zero;
-				for (int i = 0; i < movedObjects.Length; i++) {
-					movedObjects [i].transform.position = movedOjectsPosition [i];
-				}
+				anim.SetBool ("isDead", true);
+				StartCoroutine (respawn ());   
 			} else if (death_canvas.gameObject.activeInHierarchy == false) {
 				death_canvas.gameObject.SetActive (true);
 				pause_button.gameObject.SetActive (false);
@@ -93,7 +94,7 @@ public class PlayerController : MonoBehaviour {
 
 
 	void FixedUpdate () {
-		
+
 		if (keys) {
 			if ((Input.GetMouseButton (0) || Input.touchCount == 1)) {
 				if (Input.GetMouseButton (0)) {
@@ -112,14 +113,13 @@ public class PlayerController : MonoBehaviour {
 					}
 				}
 			}
-
-			//get to that location
-			if ((Mathf.Abs (transform.position.x - tapLocation.x) > 0.1f) || (Mathf.Abs (transform.position.z - tapLocation.z) > 0.1f)) {
-				rb.velocity = (tapLocation - transform.position) * speed;
-			} else {
-				tap.SetActive (false);
-			}
+			d = (tapLocation - transform.position).normalized;
 		}
+
+		if ((Mathf.Abs (transform.position.x - tapLocation.x) < 0.5f) && (Mathf.Abs (transform.position.z - tapLocation.z) < 0.5f)) {
+			d = Vector3.zero;
+		}
+		rb.MovePosition (transform.position + d * Time.deltaTime * speed);
 	}
 
 
@@ -129,6 +129,10 @@ public class PlayerController : MonoBehaviour {
 			other.gameObject.SetActive (false);
 			candynum += 1;
 			SetCountText ();
+			keys = false;
+			tapLocation = transform.position;
+			rb.velocity = Vector3.zero;
+			Camera.main.gameObject.GetComponent<CameraController> ().unlockALock = true;
 		}
 
 		//Exit Level
@@ -149,9 +153,11 @@ public class PlayerController : MonoBehaviour {
 		else if (other.gameObject.CompareTag ("Button_trigger_level1")) {
 			other.GetComponent<level1Switch>().Triggered();
 		}
-		else if (other.gameObject.CompareTag ("Button_trigger")) {
-			//keys = false;
-			//tapLocation = transform.position;
+		else if (other.gameObject.CompareTag ("Button_trigger") && notActivate) {
+			notActivate = false;
+			keys = false;
+			tapLocation = transform.position;
+			rb.velocity = Vector3.zero;
 			other.GetComponent<Trigger_Controller>().Triggered();
 		}
 
@@ -191,8 +197,18 @@ public class PlayerController : MonoBehaviour {
 	}
 		
 
-	//check of GameObject g in array
-
-
-
+	IEnumerator respawn()
+	{
+		//StartCoroutine(ShowMessage(ExitWarning, "You Shall Not Embrace the Light", 4));
+		//print(Time.time);
+		yield return new WaitForSeconds(2);
+		tapLocation = original_pos;
+		keys = true;
+		transform.position = original_pos;
+		for (int i = 0; i < movedObjects.Length; i++)
+		{
+			movedObjects[i].transform.position = movedOjectsPosition[i];
+		}
+		anim.SetBool("isDead", false);
+	}
 }

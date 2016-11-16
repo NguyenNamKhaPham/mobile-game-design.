@@ -110,6 +110,7 @@
      <Compile Include="Assets\Scripts\tapEffect.cs" />
      <Compile Include="Assets\Scripts\warningSystem.cs" />
      <Compile Include="Assets\Trigger_Controller_lvl3.cs" />
+     <Compile Include="Assets\animatorPumpkin.cs" />
      <Compile Include="Assets\clipping_controller.cs" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
@@ -174,6 +175,7 @@
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\PrepareSunShaftsBlur.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\Blend.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
+     <None Include="Assets\Particlecollection_Free samples\Particlecollection Readme.txt" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAA3Console.shader" />
      <None Include="Assets\Downloads\L_FG_Assets_Pack_Lite\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAAPreset2.shader" />
