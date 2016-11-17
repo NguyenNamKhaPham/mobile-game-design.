@@ -37,6 +37,7 @@ public class Trigger_Controller : MonoBehaviour {
 
 			}else if ((trigger_active == true) && (!trigger_1)) {
 				controlled_light_1.intensity = 0;
+				controlled_light_2.intensity = 0;
 			}
 			gameObject.GetComponent<Renderer> ().material.color = Color.green;
 			trigger_active = false;

@@ -145,6 +145,9 @@ public class PlayerController : MonoBehaviour {
 		else if (other.gameObject.CompareTag ("Button_trigger_level1")) {
 			other.GetComponent<level1Switch>().Triggered();
 		}
+		else if (other.gameObject.CompareTag ("Button_trigger_level3")) {
+			other.GetComponent<Trigger_Controller>().Triggered();
+		}
 		else if (other.gameObject.CompareTag ("Button_trigger") && notActivate) {
 			notActivate = false;
 			keys = false;
