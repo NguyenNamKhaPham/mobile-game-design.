@@ -32,7 +32,7 @@ public class WitchAI : MonoBehaviour
 		//set location
 		Vector3 temp = transform.position;
 		//transform.rotation = new Quaternion(0f, 90f, 0f, 1);
-        print(transform.rotation);
+        //print(transform.rotation);
 		start = temp;
 		temp.x += 100f;
 		stop1 = temp;
@@ -42,12 +42,21 @@ public class WitchAI : MonoBehaviour
         temp.z -= 40f;
 		end = temp;
 
+
+		if (Camera.main.gameObject.GetComponent<CameraController>().level == 3){
+			pathFlag = -1;
+			temp = start;
+			temp.z += 100f;
+			end = temp;
+			stage++;
+		}
+
 		//set step
 		moveStep = moveSpeed * Time.deltaTime;
 		rotateStep = rotateSpeed * Time.deltaTime;
 		moveSpeed = 5f;
 		rotateSpeed = 40f;
-		pathFlag = 0;
+
 		rotateDown = false;
 		subStage = true;
 		finish = false;
@@ -55,8 +64,18 @@ public class WitchAI : MonoBehaviour
 
 	void Update()
 	{ 
-		//vertical
-		if (pathFlag == 0) {
+		if (pathFlag == -1) {
+			if (stage == 0) {
+				moveTo (end);
+			} else if (stage == 1) {
+				rotation (180f);
+			} else if (stage == 2) {
+				moveTo (start);
+			} else if (stage == 3) {
+				rotation (0f);
+			}
+				
+		} else if (pathFlag == 0) {
 			if (stage == 0) {
 
 				moveTo (stop1);

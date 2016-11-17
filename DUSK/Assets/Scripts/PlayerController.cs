@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody rb;
 	public float speed;
 	private Vector3 d;
+	private float maxSpeed = 30f; 
 
 	//for movable objects
 	GameObject[] movedObjects;
@@ -81,9 +82,8 @@ public class PlayerController : MonoBehaviour {
 				anim.SetBool ("isDead", true);
 				StartCoroutine (respawn ());   
 			} else if (death_canvas.gameObject.activeInHierarchy == false) {
-				death_canvas.gameObject.SetActive (true);
-				pause_button.gameObject.SetActive (false);
-				Time.timeScale = 0;
+				anim.SetBool ("isDead", true);
+				StartCoroutine (death ());  
 			}
 		}
 	}
@@ -93,25 +93,41 @@ public class PlayerController : MonoBehaviour {
 
 		if (keys) {
 			if ((Input.GetMouseButton (0) || Input.touchCount == 1)) {
+				bool noPause = true;
 				if (Input.GetMouseButton (0)) {
 					ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				} else {
+					float x = Input.touches [0].position.x;
+					float y = Input.touches [0].position.y;
+					//Debug.Log (Input.touches [0].position);
+					Debug.Log (Screen.width - x);
+					Debug.Log (Screen.height - y);
+					if (Screen.width - x < 50 && Screen.height - y < 40) {
+						noPause = false;
+					}
 					ray = Camera.main.ScreenPointToRay (Input.touches [0].position);
 				}
 				//identify hit, find the correct hit
-				RaycastHit[] hits;
-				hits = Physics.RaycastAll (ray);
-				for (int i = 0; i < hits.Length; i++) {
-					RaycastHit hit = hits [i];
-					if (hit.collider.name == "floor") {
-						indicateTap (hit);
-						break;
+				if (noPause) {
+					RaycastHit[] hits;
+					hits = Physics.RaycastAll (ray);
+					for (int i = 0; i < hits.Length; i++) {
+						RaycastHit hit = hits [i];
+						if (hit.collider.name == "floor") {
+							indicateTap (hit);
+							break;
+						}
 					}
 				}
 			}
-			d = (tapLocation - transform.position);
 		}
-		rb.velocity = (tapLocation - transform.position) * speed;
+		d = (tapLocation - transform.position);
+		if (d.magnitude * speed > maxSpeed) {
+			d = d.normalized * maxSpeed;
+			rb.velocity = d;
+		} else {
+			rb.velocity = d * speed;
+		}
 	}
 
 
@@ -191,6 +207,12 @@ public class PlayerController : MonoBehaviour {
 		guiText.enabled = false;
 	}
 		
+	IEnumerator death(){
+		yield return new WaitForSeconds(2);
+		death_canvas.gameObject.SetActive (true);
+		pause_button.gameObject.SetActive (false);
+		Time.timeScale = 0;
+	}
 
 	IEnumerator respawn()
 	{

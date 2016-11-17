@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour {
 	public GameObject l3;
 	private GameObject l2;
 	private Vector3 offset;
-    private Vector3 pumkinPos;
+	private Vector3 pumkinPos;
 	public bool level2;
 	private Vector3 v;
 	private Vector3 v1;
@@ -25,10 +25,12 @@ public class CameraController : MonoBehaviour {
 	public GameObject magic;
 	public GameObject pointToDoor;
 	public int j;
-
+	public GameObject question;
+	private int oldFlag;
 	//transparent
 	private ArrayList oldGS = new ArrayList();
 	private GameObject[] newGS;
+	public int level;
 
 	// Use this for initialization
 	void Start () {
@@ -58,11 +60,15 @@ public class CameraController : MonoBehaviour {
 			pointToDoor.transform.LookAt (lock2.transform.position);
 			//Debug.Log (offset);
 		}
-    }
+	}
 
 
 	void unlock(){
 		if (j == 0) {
+			if (l2 != null) {
+				oldFlag = w.pathFlag;
+				w.pathFlag = 1;
+			}
 			s = transform.position;
 			doorPos = door.transform.position;
 			doorPos.y += 35;
@@ -104,6 +110,8 @@ public class CameraController : MonoBehaviour {
 				unlockALock = false;
 				GameObject.Find ("Player").GetComponent<PlayerController> ().keys = true;
 				j = 0;
+				if (l2 != null)
+					w.pathFlag = oldFlag;
 			}
 		}
 
@@ -206,13 +214,13 @@ public class CameraController : MonoBehaviour {
 			if ((Mathf.Abs (transform.position.x - v.x) < 0.1f) && (Mathf.Abs (transform.position.z - v.z) < 0.1f)) {
 				i++;
 				q = true;
-				StartCoroutine_Auto (wait (1));
+				StartCoroutine_Auto (wait (0.5f));
 			}
 		} else if (i == 4) {
 			l1.gameObject.SetActive (false);
 			i++;
 			q = true;
-			StartCoroutine_Auto (wait (1));
+			StartCoroutine_Auto (wait (0.5f));
 		} else if (i == 6) {
 			i++;
 		} else if (i == 7) {
@@ -227,10 +235,16 @@ public class CameraController : MonoBehaviour {
 			}
 		} else if (i == 9) {
 
+			Vector3 h = l2.transform.position;
+			h.y += 20;
+			h.z -= 10;
+			question.transform.position = h;
+			question.SetActive (true);
 			i++;
 			q = true;
-			StartCoroutine_Auto (wait (3));
+			StartCoroutine_Auto (wait (1));
 		} else if (i == 11) {
+			question.SetActive (false);
 			w.pathFlag = 2;
 			i++;
 		} else if (i == 12) {
