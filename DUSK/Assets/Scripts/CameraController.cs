@@ -31,6 +31,14 @@ public class CameraController : MonoBehaviour {
 	private ArrayList oldGS = new ArrayList();
 	private GameObject[] newGS;
 	public int level;
+	public Light ll1;
+	public Light ll2;
+	public Light ll3;
+	public bool switchS1;
+	public bool switchS2;
+	private Vector3 ll1p;
+	private Vector3 ll2p;
+	private Vector3 ll3p;
 
 	// Use this for initialization
 	void Start () {
@@ -53,6 +61,10 @@ public class CameraController : MonoBehaviour {
 			switchOfflevel2 ();
 		} else if (unlockALock) {
 			unlock ();
+		} else if (switchS1) { 
+			level3S1 ();
+		} else if (switchS2) { 
+			level3S2 ();
 		} else {
 			pumkinPos = Player.transform.position;
 			transform.position = pumkinPos + offset;
@@ -62,6 +74,95 @@ public class CameraController : MonoBehaviour {
 		}
 	}
 
+	void level3S1(){
+		if (j == 0) {
+			if (l2 != null) {
+				oldFlag = w.pathFlag;
+				w.pathFlag = 1;
+			}
+			s = transform.position;
+			ll2p = ll2.transform.position;
+			ll2p.y += 30;
+			ll2p.z -= 35;
+			j++;
+			q = true;
+			StartCoroutine_Auto (wait1 (0.5f));
+		
+		} else if (j == 2) {
+			transform.position = Vector3.MoveTowards (transform.position, ll2p, 100f * Time.deltaTime);
+			if ((Mathf.Abs (transform.position.x - ll2p.x) < 0.1f) && (Mathf.Abs (transform.position.z - ll2p.z) < 0.1f)) {
+				j++;
+				q = true;
+				StartCoroutine_Auto (wait1 (0.5f));
+			}
+		} else if (j == 4) {
+			ll2.intensity = 0;
+			j++;
+			q = true;
+			StartCoroutine_Auto (wait1 (0.5f));
+		} else if (j == 6) {
+			transform.position = Vector3.MoveTowards (transform.position, s, 100f * Time.deltaTime);
+			if ((Mathf.Abs (transform.position.x - s.x) < 0.1f) && (Mathf.Abs (transform.position.z - s.z) < 0.1f)) {
+				j = 0;
+				switchS1 = false;
+				GameObject.Find ("Player").GetComponent<PlayerController> ().keys = true;
+				if (l2 != null)
+					w.pathFlag = oldFlag;
+			}
+		}
+	}
+
+	void level3S2(){
+		if (j == 0) {
+			if (l2 != null) {
+				oldFlag = w.pathFlag;
+				w.pathFlag = 1;
+			}
+			s = transform.position;
+			ll1p = ll1.transform.position;
+			ll1p.y += 50;
+			ll1p.z -= 35;
+			ll3p = ll3.transform.position;
+			ll3p.y += 50;
+			ll3p.z -= 35;
+			j++;
+			q = true;
+			StartCoroutine_Auto (wait1 (0.5f));
+		} else if (j == 2) {
+			transform.position = Vector3.MoveTowards (transform.position, ll1p, 100f * Time.deltaTime);
+			if ((Mathf.Abs (transform.position.x - ll1p.x) < 0.1f) && (Mathf.Abs (transform.position.z - ll1p.z) < 0.1f)) {
+				j++;
+				q = true;
+				StartCoroutine_Auto (wait1 (0.5f));
+			}
+		} else if (j == 4) {
+			ll1.intensity = 0;
+			j++;
+			q = true;
+			StartCoroutine_Auto (wait1 (0.5f));
+		} else if (j == 6) {
+			transform.position = Vector3.MoveTowards (transform.position, ll3p, 100f * Time.deltaTime);
+			if ((Mathf.Abs (transform.position.x - ll3p.x) < 0.1f) && (Mathf.Abs (transform.position.z - ll3p.z) < 0.1f)) {
+				j++;
+				q = true;
+				StartCoroutine_Auto (wait1 (0.5f));
+			}
+		} else if (j == 8) {
+			ll3.intensity = 0;
+			j++;
+			q = true;
+			StartCoroutine_Auto (wait1 (0.5f));
+		} else if (j == 10) {
+			transform.position = Vector3.MoveTowards (transform.position, s, 100f * Time.deltaTime);
+			if ((Mathf.Abs (transform.position.x - s.x) < 0.1f) && (Mathf.Abs (transform.position.z - s.z) < 0.1f)) {
+				j = 0;
+				switchS2 = false;
+				GameObject.Find ("Player").GetComponent<PlayerController> ().keys = true;
+				if (l2 != null)
+					w.pathFlag = oldFlag;
+			}
+		}
+	}
 
 	void unlock(){
 		if (j == 0) {

@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
 
 	public bool keys;
 	public bool test_mode;
-	private bool notActivate = true;
+	private int notActivate = 0;
 	private Animator anim;
 
 	//for shadow detection
@@ -161,15 +161,29 @@ public class PlayerController : MonoBehaviour {
 		else if (other.gameObject.CompareTag ("Button_trigger_level1")) {
 			other.GetComponent<level1Switch>().Triggered();
 		}
-		else if (other.gameObject.CompareTag ("Button_trigger_level3")) {
-			other.GetComponent<Trigger_Controller>().Triggered();
-		}
-		else if (other.gameObject.CompareTag ("Button_trigger") && notActivate) {
-			notActivate = false;
+		else if (other.gameObject.CompareTag ("Button_trigger1_level3") && notActivate == 0) {
 			keys = false;
 			tapLocation = transform.position;
 			rb.velocity = Vector3.zero;
-			other.GetComponent<Trigger_Controller>().Triggered();
+			Camera.main.gameObject.GetComponent<CameraController>().switchS1 = true;
+			other.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+			notActivate++;
+		}
+		else if (other.gameObject.CompareTag ("Button_trigger2_level3") && notActivate == 1){
+			keys = false;
+			tapLocation = transform.position;
+			rb.velocity = Vector3.zero;
+			Camera.main.gameObject.GetComponent<CameraController>().switchS2 = true;
+			other.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+			notActivate++;
+		}
+		else if (other.gameObject.CompareTag ("Button_trigger") && notActivate == 0) {
+			keys = false;
+			tapLocation = transform.position;
+			rb.velocity = Vector3.zero;
+			other.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+			Camera.main.gameObject.GetComponent<CameraController> ().level2 = true;
+			notActivate++;
 		}
 
 	}

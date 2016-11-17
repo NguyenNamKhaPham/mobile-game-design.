@@ -134,7 +134,7 @@ public class WitchAI : MonoBehaviour
 			////print(stage);
 			if (stage == 0)
 			{
-                stop2.z = 150;
+                stop2.z = 160;
 				moveTo(stop2);
 			}
 			else if (stage == 1)
