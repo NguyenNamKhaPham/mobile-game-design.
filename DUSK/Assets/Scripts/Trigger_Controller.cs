@@ -27,5 +27,5 @@ public class Trigger_Controller : MonoBehaviour {
 	}
 
 	public void Triggered(){
-		
+	}		
 }
