@@ -34,7 +34,7 @@ public class WitchAI : MonoBehaviour
 		//transform.rotation = new Quaternion(0f, 90f, 0f, 1);
         //print(transform.rotation);
 		start = temp;
-		temp.x += 100f;
+		temp.x += 150f;
 		stop1 = temp;
 
 		temp.x -= 50f;

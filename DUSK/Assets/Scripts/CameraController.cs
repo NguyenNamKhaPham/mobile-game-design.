@@ -40,6 +40,8 @@ public class CameraController : MonoBehaviour {
 	private Vector3 ll2p;
 	private Vector3 ll3p;
 
+	public bool skip = false;
+
 	// Use this for initialization
 	void Start () {
 		offset = new Vector3 (0, 60, -45);
@@ -60,7 +62,29 @@ public class CameraController : MonoBehaviour {
 		if (level2) {
 			switchOfflevel2 ();
 		} else if (unlockALock) {
-			unlock ();
+			if (skip) {
+				if (j < 4) {
+					if (lock1.activeSelf) {
+						lock1.GetComponent<Animator> ().SetBool ("isUnlocked", true);
+						StartCoroutine_Auto (unlockAni (1.5f, 1));
+					} else if (lock2.activeSelf) {
+						lock2.GetComponent<Animator> ().SetBool ("isUnlocked", true);
+						StartCoroutine_Auto (unlockAni (1, 2));
+					} else if (lock3.activeSelf) {
+						lock3.GetComponent<Animator> ().SetBool ("isUnlocked", true);
+						StartCoroutine_Auto (unlockAni (1, 3));
+					}
+				}
+				unlockALock = false;
+				Player.GetComponent<PlayerController> ().ExitWarning.enabled = false;
+				skip = false;
+				j = 0;
+				if (l2 != null)
+					w.pathFlag = oldFlag;
+				StartCoroutine_Auto (wait2 (0.5f));
+			} else {
+				unlock ();
+			}
 		} else if (switchS1) { 
 			level3S1 ();
 		} else if (switchS2) { 
@@ -72,6 +96,7 @@ public class CameraController : MonoBehaviour {
 			pointToDoor.transform.LookAt (lock2.transform.position);
 			//Debug.Log (offset);
 		}
+		skip = false;
 	}
 
 	void level3S1(){
@@ -166,6 +191,9 @@ public class CameraController : MonoBehaviour {
 
 	void unlock(){
 		if (j == 0) {
+			Player.GetComponent<PlayerController> ().ExitWarning.enabled = true;
+			Player.GetComponent<PlayerController> ().ExitWarning.text = "Shake to skip";
+
 			if (l2 != null) {
 				oldFlag = w.pathFlag;
 				w.pathFlag = 1;
@@ -211,6 +239,7 @@ public class CameraController : MonoBehaviour {
 				unlockALock = false;
 				GameObject.Find ("Player").GetComponent<PlayerController> ().keys = true;
 				j = 0;
+				Player.GetComponent<PlayerController> ().ExitWarning.enabled = false;
 				if (l2 != null)
 					w.pathFlag = oldFlag;
 			}
@@ -229,6 +258,11 @@ public class CameraController : MonoBehaviour {
 			door.GetComponent<Animator> ().SetBool ("isUnlocked", true);
 			magic.SetActive(true);
 		}
+	}
+
+	IEnumerator wait2(float f){
+		yield return new WaitForSeconds (f);
+		GameObject.Find ("Player").GetComponent<PlayerController> ().keys = true;
 	}
 
 	IEnumerator wait1(float f){

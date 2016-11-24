@@ -28,8 +28,21 @@ public class PlayerController : MonoBehaviour {
 	private Ray ray; 
 	private Rigidbody rb;
 	public float speed;
-	private Vector3 d;
-	private float maxSpeed = 30f; 
+	private Vector3 s;
+	public float speed1;
+	public float speed2;
+	public float speed3;
+	public float speed4;
+	public float speed5;
+	public float distance1;
+	public float distance2;
+	public float distance3;
+	public float distance4;
+	private int debug1;
+	private int debug2;
+
+	private float lastClickTime = 0;
+	private float catchTime = 0.25f;
 
 	//for movable objects
 	GameObject[] movedObjects;
@@ -77,11 +90,11 @@ public class PlayerController : MonoBehaviour {
 			if (test_mode) {
 				StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
 				keys = false;
-				d = Vector3.zero;
 				rb.velocity = Vector3.zero;
 				anim.SetBool ("isDead", true);
 				StartCoroutine (respawn ());   
 			} else if (death_canvas.gameObject.activeInHierarchy == false) {
+				keys = false;
 				anim.SetBool ("isDead", true);
 				StartCoroutine (death ());  
 			}
@@ -100,8 +113,8 @@ public class PlayerController : MonoBehaviour {
 					float x = Input.touches [0].position.x;
 					float y = Input.touches [0].position.y;
 					//Debug.Log (Input.touches [0].position);
-					Debug.Log (Screen.width - x);
-					Debug.Log (Screen.height - y);
+					//Debug.Log (Screen.width - x);
+					//Debug.Log (Screen.height - y);
 					if (Screen.width - x < 50 && Screen.height - y < 40) {
 						noPause = false;
 					}
@@ -119,15 +132,55 @@ public class PlayerController : MonoBehaviour {
 						}
 					}
 				}
+				Vector3 d = (tapLocation - transform.position);
+				if (d.magnitude > distance1) {
+					speed = speed1;
+					debug1 = 1;
+				} else if (d.magnitude > distance2) {
+					speed = speed2;
+					debug1 = 2;
+				} else if (d.magnitude > distance3) {
+					speed = speed3;
+					debug1 = 3;
+				} else if (d.magnitude > distance4) {
+					speed = speed4;
+					debug1 = 4;
+				} else {
+					speed = speed5;
+					debug1 = 5;
+				}
+				if (debug1 != debug2) {
+					//print (debug1);
+					debug2 = debug1;
+				}
+			}
+			Vector3 q = (tapLocation - transform.position);
+			if (q.magnitude < 0.1) {
+				speed = 0;
+			} else if (q.magnitude < 1) {
+				speed = speed / 2;
+			}
+			rb.velocity = q.normalized * speed;
+
+
+		} else {
+			rb.velocity = Vector3.zero;
+			speed = 0;
+			print (Input.acceleration.magnitude);
+			if (Input.acceleration.magnitude > 2) {
+				Camera.main.gameObject.GetComponent<CameraController> ().skip = true;
+				//print ("shake");
+			}	
+			if(Input.GetButtonDown("Fire1")){
+				if (Time.time - lastClickTime < catchTime) {
+					//double click
+					print ("double click");
+					Camera.main.gameObject.GetComponent<CameraController> ().skip = true;
+				}
+				lastClickTime=Time.time;
 			}
 		}
-		d = (tapLocation - transform.position);
-		if (d.magnitude * speed > maxSpeed) {
-			d = d.normalized * maxSpeed;
-			rb.velocity = d;
-		} else {
-			rb.velocity = d * speed;
-		}
+
 	}
 
 
