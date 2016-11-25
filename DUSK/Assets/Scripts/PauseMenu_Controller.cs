@@ -3,10 +3,11 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PauseMenu_Controller : MonoBehaviour {
-	public GameObject player;
+	//public GameObject player;
 	private GameObject wagon1;
 	private GameObject wagon2;
 	public Canvas pause_canvas;
+	public Canvas leave_canvas;
 	public Button pause_button;
 
 	void Start () {
@@ -43,6 +44,20 @@ public class PauseMenu_Controller : MonoBehaviour {
 			pause_canvas.gameObject.SetActive (false);
 			pause_button.gameObject.SetActive (true);
 			Time.timeScale = 1;
+		}
+	}
+
+	public void leave_pressed(){
+		if (pause_canvas.gameObject.activeInHierarchy == true) {
+			pause_canvas.gameObject.SetActive (false);
+			leave_canvas.gameObject.SetActive (true);
+		}
+	}
+
+	public void back_pressed(){
+		if (leave_canvas.gameObject.activeInHierarchy == true) {
+			leave_canvas.gameObject.SetActive (false);
+			pause_canvas.gameObject.SetActive (true);
 		}
 	}
 

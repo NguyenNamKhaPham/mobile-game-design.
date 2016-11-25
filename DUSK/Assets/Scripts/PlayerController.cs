@@ -6,6 +6,9 @@ public class PlayerController : MonoBehaviour {
 	
 	public Text candycount;
 	public Text ExitWarning;
+	public Canvas inGame_screen;
+	public Canvas pause_screen;
+	public Canvas leave_screen;
 	public Canvas ending_screen;
 	public Canvas death_canvas;
 	public Button pause_button;
@@ -70,10 +73,27 @@ public class PlayerController : MonoBehaviour {
 
 		anim = GameObject.FindGameObjectWithTag("pumpkin").GetComponent<Animator>();
 
-		ExitWarning.enabled = false;
+		//Set UI
+		ExitWarning.material.color = Color.white;
+		ExitWarning.text = "";
+		ExitWarning.CrossFadeAlpha(0.0f, 1f, false);
 
+		pause_button.image.color = Color.white;
+		StartCoroutine (Flash_item (pause_button.image, 1.0f, 0.2f, 2, 0.3f));
+
+		inGame_screen.gameObject.SetActive (true);
+
+		if (pause_screen.gameObject.activeInHierarchy == true) {
+			pause_screen.gameObject.SetActive (false);
+		}
+		if (leave_screen.gameObject.activeInHierarchy == true) {
+			leave_screen.gameObject.SetActive (false);
+		}
 		if (ending_screen.gameObject.activeInHierarchy == true) {
 			ending_screen.gameObject.SetActive (false);
+		}
+		if (death_canvas.gameObject.activeInHierarchy == true) {
+			death_canvas.gameObject.SetActive (false);
 		}
 
 		//set candy
@@ -88,7 +108,7 @@ public class PlayerController : MonoBehaviour {
 		if (!sd.isShaded) {
 			//pop up warning, pumpkin stops and resqpawns, movable objects respawn
 			if (test_mode) {
-				StartCoroutine (ShowMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
+				StartCoroutine (PopMessage (ExitWarning, "You Shall Not Embrace the Light", 4));
 				keys = false;
 				rb.velocity = Vector3.zero;
 				anim.SetBool ("isDead", true);
@@ -198,7 +218,7 @@ public class PlayerController : MonoBehaviour {
 
 		//Exit Level
 		else if (other.gameObject.CompareTag ("Exittrigger")) {
-			
+
 			if (candynum >= required_candynum) {
 				Time.timeScale = 0;
 				if (ending_screen.gameObject.activeInHierarchy == false) {
@@ -207,7 +227,7 @@ public class PlayerController : MonoBehaviour {
 				}
 
 			} else {
-				StartCoroutine (ShowMessage (ExitWarning, "CANDY PLEASE", 3));
+				StartCoroutine (PopMessage (ExitWarning, "CANDY PLEASE", 3));
 			}
 		}
 
@@ -267,12 +287,31 @@ public class PlayerController : MonoBehaviour {
 		transform.LookAt (tapLocation);
 	}
 
-	IEnumerator ShowMessage (Text guiText, string message, float delay) {
+	IEnumerator PopMessage (Text guiText, string message, float delay) {
 		guiText.text = message;
 		guiText.enabled = true;
+		guiText.CrossFadeAlpha(1.0f, 0.5f, false);
 		yield return new WaitForSeconds(delay);
-		guiText.enabled = false;
+		guiText.CrossFadeAlpha(0.0f, 0.5f, false);
+		//guiText.enabled = false;
 	}
+
+	IEnumerator Flash_item (Image ImgObj, float max_alpha, float min_alpha, int flash_times, float delay) {
+		ImgObj.CrossFadeAlpha(max_alpha, delay, false);
+		ImgObj.enabled = true;
+		yield return new WaitForSeconds(delay);
+		int count = flash_times;
+		while (count != 0) {
+			ImgObj.CrossFadeAlpha(min_alpha, delay, false);
+			yield return new WaitForSeconds(delay);
+			ImgObj.CrossFadeAlpha(max_alpha, delay, false);
+			yield return new WaitForSeconds(delay);
+			count--;
+		}
+
+
+	}
+
 		
 	IEnumerator death(){
 		yield return new WaitForSeconds(2);
@@ -283,7 +322,7 @@ public class PlayerController : MonoBehaviour {
 
 	IEnumerator respawn()
 	{
-		//StartCoroutine(ShowMessage(ExitWarning, "You Shall Not Embrace the Light", 4));
+		//StartCoroutine(PopMessage(ExitWarning, "You Shall Not Embrace the Light", 4));
 		//print(Time.time);
 		yield return new WaitForSeconds(2);
 		tapLocation = original_pos;
