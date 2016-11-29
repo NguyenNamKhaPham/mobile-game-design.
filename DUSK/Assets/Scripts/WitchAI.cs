@@ -37,7 +37,7 @@ public class WitchAI : MonoBehaviour
 		temp.x += 150f;
 		stop1 = temp;
 
-		temp.x -= 50f;
+		temp.x -= 70f;
 		stop2 = temp;
         temp.z -= 40f;
 		end = temp;
