@@ -32,9 +32,9 @@ public class WitchAI : MonoBehaviour
 		//set location
 		Vector3 temp = transform.position;
 		//transform.rotation = new Quaternion(0f, 90f, 0f, 1);
-        print(transform.rotation);
+        //print(transform.rotation);
 		start = temp;
-		temp.x += 100f;
+		temp.x += 150f;
 		stop1 = temp;
 
 		temp.x -= 50f;
@@ -42,12 +42,21 @@ public class WitchAI : MonoBehaviour
         temp.z -= 40f;
 		end = temp;
 
+
+		if (Camera.main.gameObject.GetComponent<CameraController>().level == 3){
+			pathFlag = -1;
+			temp = start;
+			temp.z += 100f;
+			end = temp;
+			stage++;
+		}
+
 		//set step
 		moveStep = moveSpeed * Time.deltaTime;
 		rotateStep = rotateSpeed * Time.deltaTime;
 		moveSpeed = 5f;
 		rotateSpeed = 40f;
-		pathFlag = 0;
+
 		rotateDown = false;
 		subStage = true;
 		finish = false;
@@ -55,39 +64,46 @@ public class WitchAI : MonoBehaviour
 
 	void Update()
 	{ 
-		//vertical
-		if (pathFlag == 0)
-		{
-			if (stage == 0)
-			{
+		if (pathFlag == -1) {
+			if (stage == 0) {
+				moveTo (end);
+			} else if (stage == 1) {
+				rotation (180f);
+			} else if (stage == 2) {
+				moveTo (start);
+			} else if (stage == 3) {
+				rotation (0f);
+			}
+				
+		} else if (pathFlag == 0) {
+			if (stage == 0) {
 
-				moveTo(stop1);
+				moveTo (stop1);
 				////print("stop1");
-			}
-			else if (stage == 1)
-			{
-				rotation(-90f);
+			} else if (stage == 1) {
+				rotation (-90f);
 				////print("180");
-			}
-			else if (stage == 2)
-			{
+			} else if (stage == 2) {
 
-				moveTo(start);
+				moveTo (start);
 				////print("start");
-			}
-			else if (stage == 3)
-			{   
-				rotation(90f);
+			} else if (stage == 3) {   
+				rotation (90f);
 				////print("0");
 			}
+		} else if (pathFlag == 1) {  
+			anim.SetBool ("isWalking", false);
 		}
-		//pathFlag == 1 stop
 		else if(pathFlag == 2)
 		{   
 			//print("11111111");
 			if (subStage)
 			{//print("2222");
 				stage = 0;
+				moveSpeed = 35f;
+				rotateSpeed = 90f;
+				moveStep = moveSpeed * Time.deltaTime;
+				rotateStep = rotateSpeed * Time.deltaTime;
 				subStage = false;
 			}
 			else if (stage == 0)
@@ -100,7 +116,7 @@ public class WitchAI : MonoBehaviour
 			}
 			else if(stage == 2)
 			{//print("5555");
-				rotation(180f);
+				rotation(0f);
 			}
 			else if(stage == 3)
 			{//print("6666");
@@ -118,21 +134,25 @@ public class WitchAI : MonoBehaviour
 			////print(stage);
 			if (stage == 0)
 			{
-                stop2.z = 150;
-                moveTo(end);
+                stop2.z = 160;
+				moveTo(stop2);
 			}
 			else if (stage == 1)
 			{
 				finish = true;
-				rotation(0f);
+				moveSpeed = 25f;
+				rotateSpeed = 70f;
+				moveStep = moveSpeed * Time.deltaTime;
+				rotateStep = rotateSpeed * Time.deltaTime;
+				rotation(180f);
 			}
 			else if (stage == 2)
 			{
-				moveTo(stop2);
+				moveTo(end);
 			}
 			else if (stage == 3)
 			{
-				rotation(180f);
+				rotation(0f);
 
 			}
 		}
