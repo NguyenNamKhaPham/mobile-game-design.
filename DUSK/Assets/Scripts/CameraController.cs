@@ -103,8 +103,11 @@ public class CameraController : MonoBehaviour {
 
 	void level3S1(){
 		if (j == 0) {
-			if (l2 != null) {
-				oldFlag = w.pathFlag;
+            l2 = GameObject.Find("Witch_Model_Prefab(Clone)");
+            
+            if (l2 != null) {
+                w = l2.GetComponent<WitchAI>();
+                oldFlag = w.pathFlag;
 				w.pathFlag = 1;
 			}
 			s = transform.position;
@@ -141,8 +144,11 @@ public class CameraController : MonoBehaviour {
 
 	void level3S2(){
 		if (j == 0) {
-			if (l2 != null) {
-				oldFlag = w.pathFlag;
+            l2 = GameObject.Find("Witch_Model_Prefab(Clone)");
+            
+            if (l2 != null) {
+                w = l2.GetComponent<WitchAI>();
+                oldFlag = w.pathFlag;
 				w.pathFlag = 1;
 			}
 			s = transform.position;
@@ -196,8 +202,11 @@ public class CameraController : MonoBehaviour {
 			Player.GetComponent<PlayerController> ().ExitWarning.enabled = true;
 			Player.GetComponent<PlayerController> ().ExitWarning.text = "Shake to skip";
 
-			if (l2 != null) {
-				oldFlag = w.pathFlag;
+            l2 = GameObject.Find("Witch_Model_Prefab(Clone)");
+            
+            if (l2 != null) {
+                w = l2.GetComponent<WitchAI>();
+                oldFlag = w.pathFlag;
 				w.pathFlag = 1;
 			}
 			s = transform.position;
