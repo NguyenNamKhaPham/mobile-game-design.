@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			rb.velocity = Vector3.zero;
 			speed = 0;
-			print (Input.acceleration.magnitude);
+			//print (Input.acceleration.magnitude);
 			if (Input.acceleration.magnitude > 2) {
 				Camera.main.gameObject.GetComponent<CameraController> ().skip = true;
 				//print ("shake");
@@ -239,7 +239,7 @@ public class PlayerController : MonoBehaviour {
 			tapLocation = transform.position;
 			rb.velocity = Vector3.zero;
 			Camera.main.gameObject.GetComponent<CameraController>().switchS1 = true;
-			other.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+			other.gameObject.GetComponent<Renderer> ().material.color = Color.red;
 			notActivate++;
 		}
 		else if (other.gameObject.CompareTag ("Button_trigger2_level3") && notActivate == 1){
@@ -247,14 +247,14 @@ public class PlayerController : MonoBehaviour {
 			tapLocation = transform.position;
 			rb.velocity = Vector3.zero;
 			Camera.main.gameObject.GetComponent<CameraController>().switchS2 = true;
-			other.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+			other.gameObject.GetComponent<Renderer> ().material.color = Color.red;
 			notActivate++;
 		}
 		else if (other.gameObject.CompareTag ("Button_trigger") && notActivate == 0) {
 			keys = false;
 			tapLocation = transform.position;
 			rb.velocity = Vector3.zero;
-			other.gameObject.GetComponent<Renderer> ().material.color = Color.green;
+			other.gameObject.GetComponent<Renderer> ().material.color = Color.red;
 			Camera.main.gameObject.GetComponent<CameraController> ().level2 = true;
 			notActivate++;
 		}

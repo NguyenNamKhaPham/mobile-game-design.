@@ -1,12 +1,6 @@
-﻿<Properties StartupItem="Assembly-CSharp.csproj">
+﻿<Properties StartupItem="DUSK.CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerController.cs">
-    <Files>
-      <File FileName="Assets\Scripts\PlayerController.cs" Line="85" Column="1" />
-      <File FileName="Assets\Scripts\CameraController.cs" Line="374" Column="14" />
-      <File FileName="Assets\Scripts\PauseMenu_Controller.cs" Line="60" Column="43" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

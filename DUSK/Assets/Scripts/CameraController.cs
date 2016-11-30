@@ -78,10 +78,11 @@ public class CameraController : MonoBehaviour {
 				unlockALock = false;
 				Player.GetComponent<PlayerController> ().ExitWarning.enabled = false;
 				skip = false;
-				j = 0;
+
 				if (l2 != null)
 					w.pathFlag = oldFlag;
 				StartCoroutine_Auto (wait2 (0.5f));
+				j = 0;
 			} else {
 				unlock ();
 			}
@@ -94,6 +95,7 @@ public class CameraController : MonoBehaviour {
 			transform.position = pumkinPos + offset;
 			transform.LookAt (pumkinPos);
 			pointToDoor.transform.LookAt (lock2.transform.position);
+			j = 0;
 			//Debug.Log (offset);
 		}
 		skip = false;
@@ -118,7 +120,7 @@ public class CameraController : MonoBehaviour {
 			if ((Mathf.Abs (transform.position.x - ll2p.x) < 0.1f) && (Mathf.Abs (transform.position.z - ll2p.z) < 0.1f)) {
 				j++;
 				q = true;
-				StartCoroutine_Auto (wait1 (0.5f));
+				StartCoroutine_Auto (wait1 (0.25f));
 			}
 		} else if (j == 4) {
 			ll2.intensity = 0;
