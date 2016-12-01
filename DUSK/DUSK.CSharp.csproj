@@ -123,6 +123,7 @@
     <Compile Include="Assets\Scripts\ShadowDetector.cs" />
     <Compile Include="Assets\Scripts\Start_Menu_Camera_Controller.cs" />
     <Compile Include="Assets\Scripts\Trigger_Controller.cs" />
+    <Compile Include="Assets\Scripts\UI_sfx_controller.cs" />
     <Compile Include="Assets\Scripts\WitchAI.cs" />
     <Compile Include="Assets\Scripts\animatorLanternBoy.cs" />
     <Compile Include="Assets\Scripts\animatorWitch.cs" />
