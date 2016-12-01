@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour {
 	public AudioSource candy_sfx;
 	public AudioSource trigger_sfx;
 	public AudioSource Endgame_sfx;
-
 	private int candynum;
 
 
