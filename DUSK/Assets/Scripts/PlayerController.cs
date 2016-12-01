@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour {
 	
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour {
 	public AudioSource candy_sfx;
 	public AudioSource trigger_sfx;
 	public AudioSource Endgame_sfx;
+
 	private int candynum;
 
 
@@ -130,22 +132,18 @@ public class PlayerController : MonoBehaviour {
 	void FixedUpdate () {
 
 		if (keys) {
-			if ((Input.GetMouseButton (0) || Input.touchCount == 1)) {
-				bool noPause = true;
-				if (Input.GetMouseButton (0)) {
-					ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-				} else {
-					float x = Input.touches [0].position.x;
-					float y = Input.touches [0].position.y;
-					//Debug.Log (Input.touches [0].position);
-					//Debug.Log (Screen.width - x);
-					//Debug.Log (Screen.height - y);
-					if (Screen.width - x < 50 && Screen.height - y < 40) {
-						noPause = false;
-					}
-					ray = Camera.main.ScreenPointToRay (Input.touches [0].position);
+			if ((Input.touchCount == 1 &&  Input.GetTouch(0).phase == TouchPhase.Began)) {
+				bool noPause = false;
+
+					Vector2 v = new Vector2( Input.GetTouch (0).position.x,Input.GetTouch (0).position.y) ;
+					print ("tap" + v);
+				if (Screen.width - v.x > 200 || Screen.height - v.y > 200) {
+					ray = Camera.main.ScreenPointToRay (v);
+					noPause = true;
+					print ("pause");
 				}
 				//identify hit, find the correct hit
+				print (noPause + " " + tapLocation);
 				if (noPause) {
 					RaycastHit[] hits;
 					hits = Physics.RaycastAll (ray);
@@ -157,6 +155,7 @@ public class PlayerController : MonoBehaviour {
 						}
 					}
 				}
+				print (tapLocation);
 				Vector3 d = (tapLocation - transform.position);
 				if (d.magnitude > distance1) {
 					speed = speed1;
@@ -212,6 +211,9 @@ public class PlayerController : MonoBehaviour {
 	void OnTriggerEnter(Collider other){
 		//Candy collector
 		if (other.gameObject.CompareTag ("Candy")) {
+			ExitWarning.text = "";
+			ExitWarning.enabled = true;
+			ExitWarning.CrossFadeAlpha(1.0f, 0.5f, false);
 			candy_sfx.Play ();
 			other.gameObject.SetActive (false);
 			candynum += 1;
@@ -303,7 +305,7 @@ public class PlayerController : MonoBehaviour {
 		guiText.enabled = true;
 		guiText.CrossFadeAlpha(1.0f, 0.5f, false);
 		yield return new WaitForSeconds(delay);
-		guiText.CrossFadeAlpha(0.0f, 0.5f, false);
+		guiText.text = "";
 		//guiText.enabled = false;
 	}
 

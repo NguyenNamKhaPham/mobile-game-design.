@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.Audio;
 
@@ -79,7 +79,7 @@ public class CameraController : MonoBehaviour {
 					}
 				}
 				unlockALock = false;
-				Player.GetComponent<PlayerController> ().ExitWarning.enabled = false;
+				Player.GetComponent<PlayerController> ().ExitWarning.text = "";
 				skip = false;
 
 				if (l2 != null)
@@ -202,8 +202,8 @@ public class CameraController : MonoBehaviour {
 
 	void unlock(){
 		if (j == 0) {
-			Player.GetComponent<PlayerController> ().ExitWarning.enabled = true;
-			Player.GetComponent<PlayerController> ().ExitWarning.text = "Shake to skip";
+			Player.GetComponent<PlayerController> ().ExitWarning.text = "Shake/Tap to skip";
+
 
             l2 = GameObject.Find("Witch_Model_Prefab(Clone)");
             
@@ -253,7 +253,7 @@ public class CameraController : MonoBehaviour {
 				unlockALock = false;
 				GameObject.Find ("Player").GetComponent<PlayerController> ().keys = true;
 				j = 0;
-				Player.GetComponent<PlayerController> ().ExitWarning.enabled = false;
+				Player.GetComponent<PlayerController> ().ExitWarning.text = "";
 				if (l2 != null)
 					w.pathFlag = oldFlag;
 			}
